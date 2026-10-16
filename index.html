@@ -1,0 +1,1723 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>업무수첩 · 데스크 노트</title>
+<meta name="theme-color" content="#183c3c">
+<meta name="description" content="특수교사가 해마다 하는 업무, 학생 지원 서류, 개별화교육 목표·평가 문구, 관찰 기록을 한 화면에서. 기록은 이 기기 브라우저에만 저장됩니다.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='6' width='48' height='52' rx='8' fill='%231D2935'/%3E%3Crect x='16' y='18' width='32' height='7' rx='3' fill='%23FFE27A'/%3E%3Crect x='16' y='31' width='26' height='4' rx='2' fill='%23fff'/%3E%3Crect x='16' y='40' width='20' height='4' rx='2' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --paper:#EEF2F5; --sheet:#FFFFFF; --ink:#1D2935; --ink2:#55626E; --ink3:#87939E; --line:#D8E0E6;
+  --blue:#2B6CCB; --blue-d:#1D539F; --blue-s:#E3EDFB;
+  --mark:#FFE27A; --mark-s:#FFF5CC; --mark-ink:#6E5300;
+  --green:#22915C; --green-s:#DFF2E8; --red:#C93C34; --red-s:#FBE6E4;
+  --r:14px;
+  font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--blue-d)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+
+/* 틀 */
+.app{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh}
+.rail{position:sticky;top:0;height:100vh;background:var(--ink);color:#fff;padding:22px 12px;display:flex;flex-direction:column;gap:18px}
+.brand{padding:0 10px}
+.brand b{display:block;font-size:20px;letter-spacing:-.02em}
+.brand b span{background:linear-gradient(transparent 55%,rgba(255,226,122,.55) 55%)}
+.brand small{color:#9FB0BF;font-size:12.5px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;color:#C6D1DA;text-decoration:none;font-size:15px}
+.nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav a.on{background:#fff;color:var(--ink);font-weight:700}
+.nav .ls{display:none}
+.nav svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.rail .safe{margin-top:auto;font-size:12px;color:#9FB0BF;padding:0 10px;line-height:1.5}
+main{padding:28px 32px 64px;max-width:1200px;width:100%}
+
+/* 머리말 */
+.ph{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.ph h1{margin:0;font-size:26px;letter-spacing:-.02em;line-height:1.25}
+.ph .sub{color:var(--ink2);margin-top:4px}
+.ph .acts{display:flex;gap:8px;flex-wrap:wrap}
+.today-line{font-size:14px;color:var(--ink2);font-weight:600}
+
+/* 학사력 띠 */
+.yr{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:8px;margin-bottom:16px}
+.yr-row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+.yr-sem{display:grid;grid-template-columns:5fr 7fr;gap:3px;font-size:11.5px;color:var(--ink3);font-weight:600;margin:0 2px 4px}
+.yr-sem span{border-bottom:2px solid var(--line);padding:0 4px 2px}
+.yr button{border:0;background:transparent;border-radius:9px;padding:7px 0 6px;cursor:pointer;color:var(--ink2);min-width:0}
+.yr button:hover{background:var(--paper)}
+.yr .mo{display:block;font-weight:800;font-size:15px;color:var(--ink)}
+.yr .cnt{display:block;font-size:11px;color:var(--ink3)}
+.yr .bar{display:block;height:4px;border-radius:2px;background:var(--line);margin:5px 18% 0;overflow:hidden}
+.yr .bar i{display:block;height:100%;background:var(--green)}
+.yr .now{background:var(--mark)}
+.yr .now:hover{background:var(--mark)}
+.yr .now .cnt{color:var(--mark-ink)}
+
+/* 판 */
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.panel h2{font-size:17px;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.panel h2 .more{font-size:13px;font-weight:600}
+.muted{color:var(--ink3)}
+.small{font-size:13px}
+.empty{color:var(--ink2);background:var(--paper);border-radius:10px;padding:14px;font-size:14px}
+
+/* 목록 */
+.item{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.item .tx{flex:1;min-width:0}
+.item .tx .nt{display:block;font-size:12.5px;color:var(--ink3)}
+.item.done .tt{text-decoration:line-through;color:var(--ink3)}
+.ck{width:22px;height:22px;border:2px solid #A7B2BC;border-radius:6px;flex:none;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0;margin-top:1px}
+.ck svg{width:14px;height:14px;stroke:#fff;stroke-width:3;fill:none;opacity:0}
+.ck.on{background:var(--green);border-color:var(--green)}
+.ck.on svg{opacity:1}
+.icon-btn{border:0;background:none;color:var(--ink3);cursor:pointer;padding:3px 5px;border-radius:6px;font-size:13px;flex:none}
+.icon-btn:hover{background:var(--paper);color:var(--ink)}
+.acts-i{display:flex;gap:2px;flex:none;align-items:center}
+.icon-btn.del{font-size:15px;line-height:1;padding:4px 6px}
+.icon-btn.del:hover{background:var(--red-s)}
+.mcal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-bottom:6px}
+.mcal .dw{font-size:12px;font-weight:700;color:var(--ink3);text-align:center;padding:2px 0}
+.mcal .sun .dn,.mcal .dw.sun{color:var(--red)}
+.mcal .sat .dn,.mcal .dw.sat{color:var(--blue)}
+.day{border:1px solid var(--line);background:#fff;border-radius:8px;min-height:66px;padding:4px 5px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden}
+.day:hover{border-color:#9FB0BF}
+.day .dn{font-size:13px;font-weight:700;align-self:flex-start;padding:0 4px;border-radius:6px}
+.day.today .dn{background:var(--mark);color:var(--mark-ink)}
+.day.on{border:2px solid var(--blue);background:var(--blue-s);padding:3px 4px}
+.day .ev{font-size:11px;line-height:1.35;background:color-mix(in srgb,var(--c) 16%,#fff);color:var(--ink);border-left:3px solid var(--c);border-radius:4px;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.day .ev.dd{text-decoration:line-through;opacity:.55}
+.day .evm{font-size:10.5px;color:var(--ink3)}
+.day .pips{display:none;gap:2px}
+.day .pips i{width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.day .pips i.td{background:var(--green)}
+.add-row.day-add{grid-template-columns:1fr auto auto;margin-top:8px}
+.home-top{margin-bottom:16px}
+.today-panel{border:2px solid var(--ink)}
+.today-add{grid-template-columns:1fr auto;margin-bottom:4px}
+.today-add input{font-size:16px;padding:11px 13px}
+.someday-add{grid-template-columns:1fr auto;margin-top:10px}
+.today-panel .item .btn.sm{padding:3px 8px;font-size:12.5px}
+.sec-h{font-size:19px;margin:22px 0 10px}
+.week-panel{margin-bottom:16px}
+.cdot{width:14px;height:14px;border-radius:50%;border:0;padding:0;flex:none;cursor:pointer;background:var(--c);margin-top:4px;position:relative}
+.cdot::after{content:'';position:absolute;inset:-6px}
+.cdot.none{background:transparent;box-shadow:inset 0 0 0 2px #A7B0B8}
+.cdot:hover{transform:scale(1.2)}
+.item .cdot{margin-top:5px}
+.wi .cdot{width:11px;height:11px;margin-top:4px}
+.cdot-s{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--c);vertical-align:-1px;margin-right:5px;flex:none}
+.cdot-s.none{background:transparent;box-shadow:inset 0 0 0 2px #A7B0B8}
+.cf-bar{margin:-2px 0 10px}
+.chip.cf{padding:4px 11px;font-size:13px;display:inline-flex;align-items:center}
+#catPop{position:absolute;z-index:60;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(20,30,40,.18);padding:6px;min-width:170px}
+#catPop .cp-t{font-size:12px;font-weight:700;color:var(--ink3);padding:4px 8px 6px}
+#catPop button{display:flex;align-items:center;width:100%;border:0;background:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px;text-align:left;gap:2px}
+#catPop button:hover,#catPop button:focus-visible{background:var(--paper)}
+#catPop button b{margin-left:auto;color:var(--blue)}
+.cat-radios{display:flex;flex-wrap:wrap;gap:6px}
+.cr{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer;font-size:14px}
+.cr input{position:absolute;opacity:0;width:1px;height:1px}
+.cr:has(input:checked){border:2px solid var(--ink);padding:4px 10px;font-weight:700}
+.cr:has(input:focus-visible){outline:3px solid var(--blue);outline-offset:2px}
+.flbl{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+.cat-row{display:flex;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.cat-row:first-of-type{border-top:0}
+.cat-name{flex:1;min-width:120px;width:auto}
+.pal{display:flex;gap:5px;flex-wrap:wrap}
+.pal-c{width:22px;height:22px;border-radius:50%;border:0;background:var(--c);cursor:pointer;padding:0}
+.pal-c.on{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
+.tt.ed{cursor:text;border-radius:4px}
+.tt.ed:hover{background:var(--mark-s);box-shadow:0 0 0 2px var(--mark-s)}
+.ie{font:inherit;font-size:inherit;padding:2px 6px;border:2px solid var(--blue);border-radius:6px;width:100%;min-width:0;flex:1;background:#fff}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wd{border:1px solid var(--line);border-radius:12px;padding:8px 8px 6px;display:flex;flex-direction:column;min-height:150px;min-width:0;background:#fff}
+.wd.wkend{background:#F7F9FB}
+.wd.past{opacity:.75}
+.wd.today{border:2px solid var(--ink);padding:7px 7px 5px;opacity:1}
+.wh{display:flex;align-items:center;gap:4px;font-size:13.5px;margin-bottom:4px;flex-wrap:wrap}
+.wh .sun{color:var(--red)} .wh .sat{color:var(--blue)}
+.wh .wdn{color:var(--ink2);font-weight:600}
+.wh .wc{margin-left:auto;font-size:11.5px;font-weight:800;background:var(--ink);color:#fff;border-radius:999px;padding:0 7px}
+.wl{flex:1}
+.wi{display:flex;gap:5px;align-items:flex-start;padding:3px 0;font-size:13.5px;line-height:1.35}
+.wi .tt{flex:1;min-width:0}
+.wi.done .tt{text-decoration:line-through;color:var(--ink3)}
+.wi .icon-btn.del{padding:1px 3px;font-size:12px;opacity:.55}
+.wi:hover .icon-btn.del{opacity:1}
+.ck.sm{width:18px;height:18px;border-radius:5px}
+.ck.sm svg{width:11px;height:11px}
+.wempty{font-size:12px;color:var(--ink3);padding:2px 0}
+.wadd input{padding:5px 7px;font-size:13px;border-radius:7px;border-style:dashed;margin-top:4px}
+.tg{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--ink2);margin:12px 0 2px;padding-bottom:3px;border-bottom:2px solid var(--line)}
+.tg span{color:var(--ink3);font-weight:700}
+.tg.late{color:var(--red);border-color:var(--red-s)}
+.tg.now{color:var(--mark-ink);border-color:var(--mark)}
+.yr .sel{box-shadow:inset 0 0 0 2px var(--ink)}
+
+.tag{display:inline-block;font-size:12px;line-height:1.5;padding:1px 8px;border-radius:999px;background:var(--blue-s);color:var(--blue-d);font-weight:700;white-space:nowrap;vertical-align:1px}
+.tag.red{background:var(--red-s);color:var(--red)}
+.tag.y{background:var(--mark);color:var(--mark-ink)}
+.tag.g{background:var(--green-s);color:var(--green)}
+.tag.gr{background:var(--paper);color:var(--ink2)}
+
+/* 버튼·입력 */
+.btn{border:0;border-radius:10px;padding:10px 15px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff;display:inline-flex;gap:6px;align-items:center;justify-content:center;text-decoration:none;font-size:15px;line-height:1.3}
+.btn:hover{background:var(--blue-d)}
+.btn.ghost{background:var(--sheet);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--paper)}
+.btn.danger{background:var(--red)}
+.btn.sm{padding:6px 11px;font-size:13.5px;border-radius:8px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select,textarea{font:inherit;padding:9px 11px;border:1px solid #C9D3DB;border-radius:9px;background:#fff;color:var(--ink);width:100%}
+textarea{min-height:64px;resize:vertical}
+label.f{display:block;margin-bottom:12px}
+label.f>span{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:4px}
+.hint{font-size:12.5px;color:var(--ink3);margin-top:4px}
+.add-row{display:grid;grid-template-columns:1fr 150px auto;gap:8px;margin-bottom:6px}
+
+/* 안내 띠 */
+.note{border-radius:var(--r);padding:16px 18px;margin-bottom:16px;border:1px solid}
+.note.welcome{background:var(--sheet);border-color:var(--ink);border-width:2px}
+.note.warn{background:var(--mark-s);border-color:#F0D77A}
+.note h2{margin:0 0 6px;font-size:18px}
+.note ul{margin:6px 0 12px;padding-left:20px}
+.note li{margin:2px 0}
+
+/* 달력 */
+.months{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.month{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.month.now{border:2px solid var(--ink)}
+.month h3{margin:0 0 4px;font-size:17px;display:flex;justify-content:space-between;align-items:center}
+.month.now h3 .mn{background:linear-gradient(transparent 55%,var(--mark) 55%)}
+
+/* 학생 */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.st{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:8px}
+.st .nm{font-size:19px;font-weight:800;display:flex;justify-content:space-between;gap:6px;align-items:baseline}
+.st dl{margin:0;display:grid;grid-template-columns:62px 1fr;gap:3px 8px;font-size:13.5px}
+.st dt{color:var(--ink3);font-weight:600}
+.st dd{margin:0;min-width:0}
+.st .row{margin-top:auto;padding-top:4px}
+
+/* 대화상자 */
+dialog{border:0;border-radius:16px;padding:0;width:min(660px,94vw);max-height:92vh;color:var(--ink)}
+dialog::backdrop{background:rgba(20,30,40,.5)}
+dialog form{display:flex;flex-direction:column;max-height:92vh}
+.dlg-h{padding:16px 20px;border-bottom:1px solid var(--line);font-weight:800;font-size:18px;display:flex;justify-content:space-between;align-items:center}
+.dlg-b{padding:8px 20px 12px;overflow:auto}
+.dlg-f{padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.dlg-f .left{margin-right:auto}
+.sec-t{font-size:14px;font-weight:800;color:var(--blue-d);margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+
+/* 서류 */
+.doc-types{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-bottom:14px}
+.doc-types button{border:1px solid var(--line);background:var(--sheet);border-radius:12px;padding:12px 14px;text-align:left;cursor:pointer}
+.doc-types button b{display:block;font-size:15px}
+.doc-types button span{font-size:12.5px;color:var(--ink2)}
+.doc-types button.on{border:2px solid var(--blue);background:var(--blue-s);padding:11px 13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid #C3CED7;background:var(--sheet);border-radius:999px;padding:6px 13px;cursor:pointer;font-weight:600;font-size:14px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.paper{background:#fff;border:1px solid var(--line);border-radius:10px;padding:26px;overflow-x:auto}
+
+.doc h2.doc-title{font-size:20px;margin:0 0 4px}
+.doc .doc-meta{font-size:13px;color:#566;margin-bottom:14px}
+.doc-card{border:2px solid #1D2935;border-radius:10px;padding:14px 16px;margin-bottom:16px;break-inside:avoid;page-break-inside:avoid}
+.doc-card h3{margin:0 0 6px;font-size:18px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.doc-card h3 small{font-size:13px;color:#566;font-weight:600}
+.doc-row{display:grid;grid-template-columns:128px 1fr;gap:10px;padding:6px 0;border-top:1px solid #D5DCE2;font-size:14px}
+.doc-row b{color:#2D3A46}
+.doc-row.key{background:#FFF7D6;margin:0 -8px;padding:7px 8px;border-radius:6px;border-top:0}
+.nil{color:#A0AAB3}
+table.doc-t{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+table.doc-t th,table.doc-t td{border:1px solid #9AA6B1;padding:7px 9px;text-align:left;vertical-align:top}
+table.doc-t th{background:#EEF2F5;font-weight:700}
+table.doc-t td.sign{width:70px}
+.routine{white-space:pre-wrap;background:#F6F8FA;border-radius:8px;padding:10px 12px;font-size:14px;margin-bottom:14px}
+
+/* IEP */
+.iep{display:grid;grid-template-columns:250px minmax(0,1fr);gap:16px;align-items:start}
+.goal-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.goal-list button{border:1px solid var(--line);background:var(--sheet);border-radius:10px;padding:9px 11px;text-align:left;cursor:pointer;font-size:14px}
+.goal-list button small{display:block;color:var(--ink3);font-size:12px;font-weight:700}
+.goal-list button.on{border:2px solid var(--blue);background:var(--blue-s);padding:8px 10px}
+.crit{display:grid;grid-template-columns:1fr auto 1fr auto;gap:6px;align-items:center}
+.out{background:var(--paper);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.out .lbl{font-size:12.5px;font-weight:800;color:var(--ink2);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.out p{margin:5px 0 0;font-size:15.5px;white-space:pre-line}
+.out.rec{background:var(--mark-s);outline:2px solid #EBCB55}
+.data-box{border:1px dashed #B7C3CD;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:14px}
+
+/* 관찰 */
+.goal-card{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.goal-card h3{margin:0;font-size:16.5px}
+.goal-card .gmeta{font-size:13px;color:var(--ink2);margin:2px 0 10px}
+.lvs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.lv{border:0;border-radius:12px;padding:13px 4px;font-weight:800;color:#fff;cursor:pointer;font-size:15px;line-height:1.2}
+.lv small{display:block;font-size:11px;font-weight:600;opacity:.9;margin-top:2px}
+.lv:active{transform:scale(.97)}
+.lv.target{box-shadow:0 0 0 3px var(--sheet),0 0 0 5px var(--ink)}
+.obs-foot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:12px;align-items:end}
+.dots{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:6px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:-1px}
+.beh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.beh:first-of-type{border-top:0}
+.beh .n{font-size:22px;font-weight:800;min-width:34px;text-align:center}
+svg.chart{width:100%;height:auto;display:block}
+
+/* 알림 */
+#toast.act{pointer-events:auto;display:flex;gap:12px;align-items:center}
+#toast .undo{border:0;background:var(--mark);color:var(--mark-ink);font-weight:800;border-radius:8px;padding:5px 10px;cursor:pointer}
+dialog.ask{width:min(400px,92vw)}
+.ask-b{padding:20px 20px 8px;font-size:15.5px;line-height:1.6}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#printArea{display:none}
+
+@media (max-width:1100px){
+  .week{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:1000px){
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .iep{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:899px){
+  .app{display:block}
+  .rail{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;padding:5px 4px calc(5px + env(safe-area-inset-bottom));z-index:30;flex-direction:row;gap:0}
+  .brand,.rail .safe{display:none}
+  .nav{flex-direction:row;width:100%;justify-content:space-between}
+  .nav a{flex-direction:column;gap:2px;font-size:10.5px;padding:6px 2px;flex:1;justify-content:center;text-align:center;min-width:0;white-space:nowrap}
+  .nav a.on{background:rgba(255,255,255,.95)}
+  .nav .lf{display:none}.nav .ls{display:inline}
+  #toast{bottom:84px}
+  main{padding:18px 16px 100px}
+  .ph h1{font-size:22px}
+  .add-row{grid-template-columns:1fr 1fr}
+  .add-row input[type=text]{grid-column:1/-1}
+  .add-row.day-add{grid-template-columns:1fr 1fr}
+  .add-row.today-add,.add-row.someday-add{grid-template-columns:1fr auto}
+  .add-row.today-add input[type=text],.add-row.someday-add input[type=text]{grid-column:auto}
+  .week{grid-template-columns:minmax(0,1fr)}
+  .wd{min-height:0}
+  .wd .wempty{display:none}
+  .day{min-height:46px;padding:3px 2px;align-items:center}
+  .day.on{padding:2px 1px}
+  .day .dn{align-self:center}
+  .day .ev,.day .evm{display:none}
+  .day .pips{display:flex}
+  .two{grid-template-columns:1fr}
+  .lvs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .obs-foot{grid-template-columns:minmax(0,1fr)}
+  .yr .cnt{display:none}
+  .yr{padding:6px}
+  .yr-row{gap:1px}
+  .yr .mo{font-size:12px;white-space:nowrap;letter-spacing:-.04em}
+  .yr .bar{margin:4px 12% 0}
+  .paper{padding:14px}
+  .doc-row{grid-template-columns:96px 1fr}
+}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+
+@media print{
+  body{background:#fff}
+  .app,dialog,#toast{display:none!important}
+  #printArea{display:block}
+  table.doc-t{min-width:0}
+  @page{size:A4;margin:13mm}
+}
+</style>
+<style>
+/* Desk Notes — a calm, high-contrast visual layer for the teacher's workspace. */
+:root{
+  --paper:#f4f2ec;--sheet:#fffefa;--ink:#203b3d;--ink2:#536b6b;--ink3:#697f7d;--line:#d8e1dc;
+  --blue:#087f70;--blue-d:#066456;--blue-s:#e1f3eb;
+  --mark:#f4c66b;--mark-s:#fff5d8;--mark-ink:#5f4614;
+  --green:#127657;--green-s:#e2f2e8;--red:#ba5046;--red-s:#fae9e4;
+  --r:20px;
+}
+body{font-size:16px;line-height:1.62;letter-spacing:-.013em;background:var(--paper)}
+a{color:var(--blue-d);text-underline-offset:3px}
+:focus-visible{outline-color:#e7a744;outline-width:3px;outline-offset:3px}
+.app{grid-template-columns:244px minmax(0,1fr)}
+.rail{background:#183c3c;padding:30px 16px 22px;gap:34px;border-right:1px solid #42615a}
+.brand{padding:0 15px}
+.brand::before{content:'FIELD NOTES  /  EDUCATION';display:block;color:#98d9c6;font-size:10px;font-weight:800;letter-spacing:.16em;margin-bottom:14px}
+.brand b{font-size:26px;line-height:1.2;letter-spacing:-.06em}
+.brand b span{background:linear-gradient(transparent 65%,#b6d6aa 65%)}
+.brand small{display:block;color:#bfd3cb;font-size:13px;margin-top:10px;line-height:1.45}
+.nav{gap:6px}
+.nav a{min-height:49px;border-radius:13px;padding:11px 14px;color:#d4e6df;font-size:15.5px;font-weight:600;transition:background .16s,color .16s,transform .16s}
+.nav a:hover{background:#2b5450;color:#fff;transform:translateX(2px)}
+.nav a.on{background:#d9eee4;color:#174943;box-shadow:0 2px 0 rgba(0,0,0,.12)}
+.nav svg{width:21px;height:21px;stroke-width:2}
+.rail .safe{color:#c8ddd4;background:#28514c;border:1px solid #50766d;border-radius:14px;padding:13px 14px;line-height:1.55;font-size:12.5px}
+main{padding:34px clamp(22px,3.5vw,56px) 90px;max-width:1500px}
+
+/* Page heading */
+.ph{position:relative;overflow:hidden;isolation:isolate;align-items:center;background:#1b514b;color:#fff;border-radius:25px;padding:30px 34px;margin:0 0 23px;min-height:145px;box-shadow:0 12px 25px rgba(26,69,62,.12)}
+.ph::after{content:'';position:absolute;width:310px;height:310px;right:-82px;top:-152px;border-radius:50%;border:54px solid rgba(204,237,218,.11);z-index:-1;pointer-events:none}
+.ph h1{font-size:clamp(27px,2.6vw,37px);letter-spacing:-.055em;line-height:1.22;margin-top:5px}
+.ph .sub{color:#ddede6;margin-top:11px;font-size:15px;line-height:1.5}
+.ph .sub b{color:#ffd787!important}
+.ph .acts{z-index:1}
+.ph .btn.ghost{color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.48)}
+.ph .btn.ghost:hover{background:rgba(255,255,255,.22)}
+.ph .btn:not(.ghost){background:#f3c66c;color:#283d37}
+.ph .btn:not(.ghost):hover{background:#ffda8d}
+.today-line{color:#d8f1e4;font-weight:800;font-size:13px;letter-spacing:.07em}
+
+/* Cards and section structure */
+.grid{gap:18px;grid-template-columns:minmax(0,1.17fr) minmax(0,1fr)}
+.panel,.month,.st,.goal-card{background:var(--sheet);border-color:var(--line);box-shadow:0 3px 0 rgba(29,76,68,.045),0 12px 28px rgba(39,67,55,.035)}
+.panel{padding:23px 25px}
+.panel h2{font-size:20px;letter-spacing:-.035em;margin-bottom:14px;line-height:1.35;color:var(--ink)}
+.panel h2 .more{font-size:13.5px;color:var(--blue-d);font-weight:800;text-decoration:none;border-bottom:1px solid currentColor;white-space:nowrap}
+.today-panel{border:2px solid #c59a4f;background:linear-gradient(135deg,#fffefa 72%,#fff5da)}
+.today-panel h2::before{content:'';width:9px;height:24px;background:#dca957;border-radius:5px;display:inline-block;margin-right:5px;vertical-align:-4px}
+.week-panel{margin-bottom:21px}
+.muted{color:var(--ink3)}
+.empty{background:#f2f6f1;color:var(--ink2);border:1px dashed #d2e1d5;padding:16px;border-radius:12px}
+.sec-h{font-size:23px;letter-spacing:-.04em;margin-top:32px}
+.item{padding:12px 2px;border-color:#e6ebe5;align-items:center}
+.item .tx .nt{color:var(--ink2);margin-top:2px;font-size:13px}
+.item.done .tt,.wi.done .tt{color:var(--ink3)}
+.ck{width:25px;height:25px;border-color:#8da79b;border-radius:8px}
+.ck.on{background:var(--blue);border-color:var(--blue)}
+.ck.sm{width:21px;height:21px}
+.icon-btn{color:var(--ink2);font-weight:700}
+.icon-btn:hover{background:var(--blue-s);color:var(--blue-d)}
+.tt.ed:hover{background:#fff0c8;box-shadow:0 0 0 3px #fff0c8}
+.tag{font-size:12.5px;padding:2px 9px;background:var(--blue-s);color:var(--blue-d)}
+.tag.y{background:#f7dc9e;color:#59410e}
+.tag.gr{background:#edf2ee;color:#596e66}
+.tg{color:var(--ink);border-bottom-color:#d4e5db;font-size:14px;letter-spacing:-.02em;margin-top:17px}
+.tg.now{color:#86631c;border-color:#e6c274}
+.tg.late{color:var(--red);border-color:#efc9c4}
+
+/* Forms and controls */
+.btn{min-height:44px;background:var(--blue);border-radius:11px;box-shadow:none;transition:background .16s,transform .16s;font-size:15px}
+.btn:hover{background:var(--blue-d);transform:translateY(-1px)}
+.btn.ghost{background:#fffefa;border-color:#b8d1c6;color:var(--blue-d)}
+.btn.ghost:hover{background:#e9f5ee}
+.btn.sm{min-height:36px;padding:7px 13px;font-size:13.5px}
+.btn.danger{background:var(--red);color:#fff}
+input,select,textarea{min-height:44px;border:1.5px solid #b8ccc2;border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:3px solid #bce0cc;outline-offset:1px;border-color:var(--blue-d)}
+input::placeholder,textarea::placeholder{color:#687e77;opacity:1}
+.flbl,label.f>span{color:var(--ink2)}
+.hint{color:var(--ink2);line-height:1.5}
+.add-row{gap:9px}
+.chip,.cr{border-color:#afc9bc;color:var(--ink);background:#fffefa;font-weight:700}
+.chip{min-height:35px;padding:5px 13px}
+.chip.on{background:#1b514b;border-color:#1b514b;color:#fff}
+.chip:hover:not(.on){background:#eaf5ed}
+.cf-bar{gap:7px;margin-bottom:15px}
+.cdot{width:16px;height:16px}
+
+/* Calendar and planning */
+.yr{padding:12px 13px;background:#fffefa;box-shadow:0 3px 0 rgba(29,76,68,.04);margin-bottom:20px}
+.yr-sem{color:var(--ink2);font-size:12px;margin:0 4px 8px}
+.yr-sem span{border-color:#c4d9c9}
+.yr button{padding:10px 0 9px;border-radius:10px}
+.yr button:hover{background:#eaf4ec}
+.yr .mo{font-size:16px}
+.yr .cnt{font-size:12px;color:var(--ink2)}
+.yr .bar{background:#e1eae2;height:5px}
+.yr .bar i{background:#15806b}
+.yr .now{background:#f8e1a9}
+.yr .now:hover{background:#f3d58b}
+.yr .sel{box-shadow:inset 0 0 0 2px #29675c}
+.week{gap:8px}
+.wd{background:#fbfdf9;border-color:#d9e5da;border-radius:14px;min-height:170px;padding:10px}
+.wd.wkend{background:#f5f6f1}
+.wd.today{border-color:#c59140;background:#fff8e6;box-shadow:inset 0 0 0 1px #eac884}
+.wd.past{opacity:.78}
+.wh{border-bottom:1px solid #e0e9dc;padding-bottom:7px;margin-bottom:7px}
+.wh .wc{background:#26685c}
+.wadd input{background:#fff;min-height:34px}
+.day{border-color:#d7e3d9;background:#fdfefb}
+.day:hover{border-color:#087f70;background:#f4faf5}
+.day.today .dn{background:#f4c66b}
+.day.on{border-color:#087f70;background:#e8f5ed}
+.month{padding:17px 19px}
+.month.now{border-color:#d49c45}
+.month.now h3 .mn{background:linear-gradient(transparent 62%,#f2cd7c 62%)}
+.quick-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.quick-actions button,.quick-actions a{min-height:64px;border:1px solid #c9ddd0;background:#fffefa;border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:10px;text-align:left;text-decoration:none;color:var(--ink);font:inherit;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 rgba(29,76,68,.05)}
+.quick-actions button:hover,.quick-actions a:hover{background:#e9f6eb;border-color:#83b6a0;color:#174d43}
+.quick-icon{flex:none;width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:#e0f1e6;color:#146d5b;font-size:20px;line-height:1}
+.quick-actions a:nth-child(3) .quick-icon{font-size:16px}
+.week-summary{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:16px;padding-top:16px;padding-bottom:16px}
+.week-summary h2{margin:0 0 2px}
+.week-summary p{margin:0;color:var(--ink2);font-size:14px}
+.week-summary .btn{flex:none}
+.note.welcome{padding:15px 20px}
+.note.welcome h2{font-size:18px;margin-bottom:3px}
+.note.welcome .row{margin-top:9px}
+.home-month .mcal{gap:5px;margin:3px 0 13px}
+.home-month .day{min-height:75px;padding:6px;border-radius:10px}
+.home-month .day.on{padding:5px}
+.home-month .day .dn{font-size:14px}
+.home-month .day .ev{font-size:10.5px}
+.home-month .day-detail{border-top:1px solid #d7e6d8;padding-top:8px}
+.home-month .month-link{display:inline-block;margin-top:10px;font-size:14px;font-weight:800;text-decoration:none;border-bottom:1px solid currentColor}
+.home-month h2 .row{flex-wrap:nowrap}
+.home-month h2 .btn{min-width:36px}
+.home-someday{margin-bottom:20px}
+
+/* Student, document, goal and record views */
+.cards{gap:15px}
+.st{padding:22px;gap:10px}
+.st .nm{font-size:22px;color:#1a5149}
+.st dl{font-size:14px;grid-template-columns:75px 1fr;gap:5px 9px}
+.st dt{color:var(--ink2)}
+.paper{border-color:#cbd9ce;box-shadow:0 14px 32px rgba(37,65,57,.05);padding:32px}
+.doc-types{gap:10px}
+.doc-types button{min-height:85px;border-color:#cbdcd1;padding:14px 16px}
+.doc-types button:hover{background:#f3faf4;border-color:var(--blue)}
+.doc-types button.on{background:#e5f3e9;border-color:var(--blue)}
+.goal-list button{border-color:#cbdcd1;padding:12px 13px}
+.goal-list button.on{background:#e5f3e9;border-color:var(--blue)}
+.out{background:#f1f6f1}
+.out.rec{background:#fff4d6;outline-color:#d8aa53}
+.goal-card{padding:22px}
+.goal-card h3{font-size:19px}
+.lv{min-height:63px;border-radius:12px}
+.note{padding:20px 23px;box-shadow:0 3px 0 rgba(29,76,68,.04)}
+.note.welcome{border-color:#91bdab;background:#fffefa}
+.note.welcome h2{font-size:23px;color:#1a5149}
+.note.warn{background:#fff7df;border-color:#e5c77a}
+dialog{border-radius:20px;box-shadow:0 22px 70px rgba(10,37,32,.25)}
+dialog::backdrop{background:rgba(14,40,36,.62)}
+.dlg-h{background:#eef6ed;padding:18px 23px;color:#1b514b;font-size:20px}
+.dlg-b{padding:10px 23px 17px}
+.dlg-f{padding:15px 23px;background:#fbfdf9}
+.sec-t{color:var(--blue-d);border-color:#cfdfd1}
+#toast{background:#1a5149;box-shadow:0 8px 30px rgba(0,0,0,.22)}
+#catPop{border-color:#bbd3c4;box-shadow:0 15px 35px rgba(15,46,38,.19)}
+
+@media(max-width:1100px){.week{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1150px){.quick-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1000px){.grid,.iep{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:899px){
+  .app{display:block}
+  .rail{background:#183c3c;padding:6px 5px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid #42615a;box-shadow:0 -6px 22px rgba(25,55,48,.13)}
+  .nav{gap:1px}
+  .nav a{min-height:57px;padding:5px 2px;font-size:11px;transform:none!important;border-radius:10px;color:#e2eee7}
+  .nav a.on{background:#d9eee4}
+  .nav svg{width:21px;height:21px}
+  main{padding:17px 15px 105px}
+  .ph{min-height:0;padding:23px 22px;margin-bottom:17px;border-radius:20px}
+  .ph h1{font-size:26px}
+  .ph .sub{font-size:14px}
+  .panel{padding:19px 18px}
+  .quick-actions{gap:7px;margin-bottom:14px}
+  .quick-actions button,.quick-actions a{min-height:55px;padding:8px;font-size:13px;gap:7px}
+  .quick-icon{width:27px;height:27px;font-size:18px}
+  .week-summary{padding:15px 17px}
+  .panel h2{font-size:18px}
+  .week{grid-template-columns:minmax(0,1fr)}
+  .wd{min-height:0}
+  .yr{padding:8px}
+  .yr .mo{font-size:12px}
+  .yr button{padding:8px 0 7px}
+  .paper{padding:18px}
+  .home-month .day{min-height:49px;padding:4px 2px}
+  .home-month .day.on{padding:3px 1px}
+  .today-panel h2::before{height:20px}
+}
+@media(max-width:430px){
+  .nav a{font-size:10px}
+  .quick-actions button,.quick-actions a{font-size:12.5px}
+  .week-summary .btn{font-size:12px;padding:7px 9px}
+  .ph{padding:22px 19px}
+  .ph h1{font-size:24px}
+  .btn{min-height:42px}
+  .lvs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .doc-types{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){.nav a,.btn{transition:none}}
+@media print{.paper{box-shadow:none}.doc-card{border-color:#1d2935}}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand"><b><span>업무수첩</span></b><small>특수교사 한눈에 업무판</small></div>
+    <nav class="nav" id="nav" aria-label="메뉴"></nav>
+    <div class="safe">기록은 이 기기 브라우저에만 저장돼요. 다른 곳으로 보내지 않아요.</div>
+  </aside>
+  <main id="view" tabindex="-1"></main>
+</div>
+<div id="printArea"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="dlg"></dialog>
+<dialog id="ask" class="ask"></dialog>
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+
+<script>
+'use strict';
+/* ===== 기본값 ===== */
+const KEY = 'tdesk-v1';
+const ORDER = [3,4,5,6,7,8,9,10,11,12,1,2];
+const DOW = ['일','월','화','수','목','금','토'];
+
+const PALETTE = ['#8E8E93','#FF9500','#007AFF','#FF3B30','#FFCC00','#34C759','#AF52DE','#FF2D55','#A2845E'];
+const DEFAULT_CATS = [
+  {id:'c-iep',  name:'IEP·평가',    color:'#007AFF'},
+  {id:'c-par',  name:'학부모·상담', color:'#FF9500'},
+  {id:'c-safe', name:'안전·행사',   color:'#FF3B30'},
+  {id:'c-cls',  name:'수업 준비',   color:'#FFCC00'},
+  {id:'c-adm',  name:'행정·공문',   color:'#8E8E93'}
+];
+const DEFAULT_TASKS = [
+  ['d01',3,'개별화교육지원팀 구성','03-15','예시 · 학년 시작일부터 2주 이내 (법정)'],
+  ['d02',3,'1학기 개별화교육계획 작성','03-31','예시 · 학기 시작일부터 30일 이내 (법정)'],
+  ['d14',7,'1학기 개별화교육 평가·보호자 통보','','예시'],
+  ['d17',8,'2학기 개별화교육계획 작성','','예시 · 2학기 시작일부터 30일 이내 (법정)'],
+  ['d25',12,'2학기 개별화교육 평가·보호자 통보','','예시']
+].map(([id,m,title,due,note]) => ({id,m,title,due,note,base:true,cat:'c-iep'}));
+
+const LV = [
+  {short:'스스로',  full:'스스로',        goal:'스스로 ',                       adv:'스스로',                       teach:'스스로 해 볼 기회를 주며',    c:'#1C7F4F'},
+  {short:'언어',    full:'언어 촉진',      goal:'언어적 촉진이 주어지면 ',        adv:'언어적 촉진을 받아',            teach:'언어적 촉진을 주며',          c:'#3E8E5A'},
+  {short:'시범',    full:'몸짓·시범',      goal:'교사의 몸짓이나 시범을 보고 ',   adv:'교사의 몸짓이나 시범을 보고',    teach:'몸짓이나 시범을 보이며',      c:'#6B8A22'},
+  {short:'부분 신체',full:'부분 신체 도움', goal:'부분적인 신체 도움을 받아 ',     adv:'부분적인 신체 도움을 받아',      teach:'부분적인 신체 도움을 주며',   c:'#B07A12'},
+  {short:'전체 신체',full:'전체 신체 도움', goal:'신체적 도움을 받아 ',            adv:'신체적 도움을 받아',            teach:'신체적 도움을 주며',          c:'#B5581E'},
+  {short:'안 함',   full:'수행하지 않음',  c:'#7D8892'}
+];
+const SUBJECTS = ['국어','수학','사회','과학','진로와 직업','체육','음악','미술','영어','정보','일상생활 활동','의사소통','사회성·행동','기타'];
+const METHODS = ['관찰 평가','수행 평가','체크리스트','포트폴리오','구술 평가'];
+
+const FIELDS = [
+  {sec:'기본'},
+  {k:'alias',l:'부르는 이름',p:'예: 1번, 민○ (실명 대신 별칭 권장)',req:true,half:true},
+  {k:'grade',l:'학년·반',p:'예: 중1-2',half:true},
+  {sec:'의사소통·성향'},
+  {k:'comm',l:'의사소통 방법',p:'예: 짧은 말(2~3낱말), 고를 때는 그림 카드',ta:true},
+  {k:'likes',l:'좋아하는 것·강화물',p:'예: 버스 영상, 퍼즐, 스티커'},
+  {k:'hard',l:'힘들어하는 것',p:'예: 큰 소리, 갑작스러운 일정 변경'},
+  {sec:'행동 지원'},
+  {k:'signs',l:'힘들 때 보이는 신호',p:'예: 귀를 막고 같은 말을 반복함'},
+  {k:'respond',l:'이렇게 도와주세요',p:'예: 조용히 다음 일정을 그림으로 보여 주고 기다리기',ta:true},
+  {k:'calm',l:'진정하는 방법',p:'예: 쉼 공간에서 5분, 좋아하는 그림책'},
+  {k:'track',l:'관찰 기록할 행동',p:'예: 자리 이탈, 소리 지르기',hint:'쉼표로 나누면 관찰 기록에서 횟수를 셀 수 있어요'},
+  {sec:'생활 지원'},
+  {k:'mobility',l:'이동',p:'예: 혼자 걷기 / 수동 휠체어(밀어 주기)',half:true},
+  {k:'meal',l:'식사 형태',p:'예: 일반식 / 다진식 / 죽식',half:true},
+  {k:'mealHelp',l:'식사 도움',p:'예: 숟가락 사용, 국은 덜어 주기'},
+  {k:'avoid',l:'피해야 할 음식',p:'예: 견과류',hint:'급식 안전에 꼭 필요한 내용만 적어 주세요'},
+  {k:'health',l:'건강·투약 메모',p:'예: 점심 후 약 먹기 (보건실 보관)',hint:'진단명보다 해야 할 일 위주로 적는 것을 권장해요'},
+  {sec:'안전'},
+  {k:'evacHelper',l:'대피 담당자',p:'예: 담임, 실무사 ○○○',half:true},
+  {k:'evacBackup',l:'대체 담당자',p:'예: 사회복무요원 ○○○',half:true},
+  {k:'evacNote',l:'대피 시 주의',p:'예: 사이렌 소리에 놀라므로 귀마개 챙기기'},
+  {sec:'협력'},
+  {k:'inclusion',l:'통합학급 수업',p:'예: 1-3반 음악·체육'},
+  {k:'inclusionTips',l:'통합 수업에서 도와주는 방법',p:'예: 앞자리, 활동 순서를 그림으로 미리 보여 주기',ta:true},
+  {k:'contact',l:'연락할 사람',p:'예: 담임 교실 내선 ○○○',hint:'보호자 전화번호보다 학교 연락처를 권장해요'}
+];
+
+const DOCS = [
+  {k:'beh',  name:'행동지원 카드',     desc:'보결·실무사 인수인계용, 학생별 한 장'},
+  {k:'inc',  name:'통합학급 안내 카드', desc:'통합 수업 선생님께 드리는 학생 안내'},
+  {k:'evac', name:'대피 지원 배정표',  desc:'학급 전체 이동 방법·대피 담당'},
+  {k:'meal', name:'식사 지원표',       desc:'급식실·실무사와 함께 보는 표'},
+  {k:'sub',  name:'보결 학급 안내',    desc:'갑자기 들어오는 선생님용 한 장'},
+  {k:'goals',name:'개별화 목표 모음',   desc:'학생별 이번 학기 목표와 기준'}
+];
+
+const NAV = [
+  ['home','홈','홈','<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],
+  ['cal','업무 달력','달력','<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+  ['stu','학생 카드','학생','<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/>'],
+  ['doc','서류 만들기','서류','<path d="M6 3h9l5 5v13H6z"/><path d="M14 3v6h6M9 13h7M9 17h7"/>'],
+  ['iep','IEP 문구','IEP','<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>'],
+  ['obs','관찰 기록','기록','<path d="M5 20v-7M11 20V5M17 20v-10M3 20h18"/>'],
+  ['set','설정·백업','설정','<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>']
+];
+
+/* ===== 도구 ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const pad = n => String(n).padStart(2,'0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const todayStr = () => ymd(new Date());
+const parseYmd = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const dayDiff = s => Math.round((parseYmd(s) - parseYmd(todayStr())) / 86400000);
+const fmtMD = s => { const d = parseYmd(s); return `${d.getMonth()+1}월 ${d.getDate()}일`; };
+const fmtMDw = s => { const d = parseYmd(s); return `${d.getMonth()+1}월 ${d.getDate()}일 (${DOW[d.getDay()]})`; };
+const schoolYear = (d = new Date()) => d.getMonth()+1 >= 3 ? d.getFullYear() : d.getFullYear()-1;
+const CHECK = '<svg viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5"/></svg>';
+const nil = v => v && String(v).trim() ? esc(v) : '<span class="nil">—</span>';
+
+function toast(msg, undo){
+  const t = $('#toast'); t.textContent = msg; t.classList.toggle('act', !!undo);
+  if (undo){
+    const b = document.createElement('button'); b.textContent = '되돌리기'; b.className = 'undo';
+    b.onclick = ev => { ev.stopPropagation(); undo(); t.classList.remove('show'); };
+    t.appendChild(b);
+  }
+  t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), undo ? 5000 : 2200);
+}
+// 브라우저 confirm 대신 쓰는 확인 창 (미리보기 창처럼 팝업이 막힌 곳에서도 동작)
+function ask(msg, ok = '확인', danger = true){
+  return new Promise(res => {
+    const d = $('#ask');
+    d.innerHTML = `<div class="ask-b">${esc(msg).replace(/\n/g,'<br>')}</div>
+      <div class="dlg-f"><button type="button" class="btn ghost" data-ans="0">취소</button><button type="button" class="btn ${danger?'danger':''}" data-ans="1">${esc(ok)}</button></div>`;
+    const done = v => { d.close(); res(v); };
+    d.querySelector('[data-ans="0"]').onclick = ev => { ev.stopPropagation(); done(false); };
+    d.querySelector('[data-ans="1"]').onclick = ev => { ev.stopPropagation(); done(true); };
+    d.oncancel = ev => { ev.preventDefault(); done(false); };
+    d.showModal(); d.querySelector('[data-ans="1"]').focus();
+  });
+}
+async function copyText(text){
+  try { await navigator.clipboard.writeText(text); toast('복사했어요'); }
+  catch(e){
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); toast('복사했어요'); } catch(_) { toast('복사가 안 돼요. 글을 직접 선택해 주세요'); }
+    ta.remove();
+  }
+}
+
+/* ===== 저장 ===== */
+function fresh(){
+  return {v:1, settings:{className:'',teacher:'',routine:''}, todos:[], tasks:DEFAULT_TASKS.map(t=>({...t})),
+    doneTasks:{}, students:[], obs:[], beh:[], welcomed:false, lastExport:null, tasksV2:true, cats:DEFAULT_CATS.map(c=>({...c}))};
+}
+function load(){
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && s.v === 1) return Object.assign(fresh(), {tasksV2:false}, s);
+  } catch(e) {}
+  return fresh();
+}
+let S = load();
+if (!S.tasksV2){ // 예전 기본 업무 정리 (직접 추가·수정한 업무는 그대로)
+  const keep = new Set(DEFAULT_TASKS.map(t => t.id));
+  S.tasks = S.tasks.filter(t => !t.base || keep.has(t.id));
+  S.tasks.forEach(t => { const d = DEFAULT_TASKS.find(x => x.id === t.id); if (d) t.note = d.note; });
+  S.tasksV2 = true; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
+}
+if (!Array.isArray(S.cats)){ // 카테고리 처음 생김
+  S.cats = DEFAULT_CATS.map(c => ({...c}));
+  S.tasks.forEach(t => { if (t.base && !t.cat) t.cat = 'c-iep'; });
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
+}
+let storageOk = (() => { try { const k = '__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; } catch(e){ return false; } })();
+const canStore = storageOk;
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); storageOk = true; return true; }
+  catch(e){ if (storageOk) toast('이 브라우저에는 저장할 수 없어요. 설정에서 백업 파일을 받아 두세요'); storageOk = false; return false; }
+}
+
+/* ===== 업무 ===== */
+const doneList = () => (S.doneTasks[schoolYear()] ||= []);
+const isDone = id => (S.doneTasks[schoolYear()] || []).includes(id);
+function taskDate(t){
+  if (!t.due) return null;
+  const [mm, dd] = t.due.split('-').map(Number);
+  const y = mm >= 3 ? schoolYear() : schoolYear()+1;
+  return `${y}-${pad(mm)}-${pad(dd)}`;
+}
+const tasksOf = m => S.tasks.filter(t => t.m === m);
+function ddayTag(s){
+  const n = dayDiff(s);
+  if (n < 0) return `<span class="tag red">${n < -30 ? '지남' : -n + '일 지남'}</span>`;
+  if (n === 0) return `<span class="tag y">오늘</span>`;
+  if (n <= 7) return `<span class="tag y">D-${n}</span>`;
+  return `<span class="tag gr">D-${n}</span>`;
+}
+const catOf = x => x && x.cat ? S.cats.find(c => c.id === x.cat) || null : null;
+function catDot(x, k){
+  const c = catOf(x);
+  return `<button class="cdot ${c?'':'none'}" style="${c?`--c:${c.color}`:''}" data-act="catPick" data-k="${k}" data-id="${x.id}" aria-label="카테고리: ${c?esc(c.name):'없음'} (눌러서 바꾸기)" title="${c?esc(c.name):'카테고리 없음'}"></button>`;
+}
+const passCat = x => !ui.catFilter || (ui.catFilter === 'none' ? !x.cat || !catOf(x) : x.cat === ui.catFilter);
+function catFilterBar(){
+  const chip = (id, label, color, hollow) => `<button class="chip cf ${ui.catFilter===id?'on':''}" aria-pressed="${ui.catFilter===id}" data-act="catFilter" data-c="${id??''}">${color||hollow?`<i class="cdot-s ${hollow?'none':''}" style="${color?`--c:${color}`:''}"></i>`:''}${label}</button>`;
+  return `<div class="chips cf-bar">${chip(null,'전체')}${S.cats.map(c => chip(c.id, esc(c.name), c.color)).join('')}${chip('none','없음',null,true)}</div>`;
+}
+function catPopup(anchor){
+  closeCatPop();
+  const k = anchor.dataset.k, id = anchor.dataset.id;
+  const obj = k === 'task' ? S.tasks.find(t => t.id === id) : S.todos.find(t => t.id === id);
+  if (!obj) return;
+  const pop = document.createElement('div'); pop.id = 'catPop'; pop.setAttribute('role','menu');
+  pop.innerHTML = `<div class="cp-t">카테고리</div>` + S.cats.map(c => `<button role="menuitemradio" aria-checked="${obj.cat===c.id}" data-act="catSet" data-k="${k}" data-id="${id}" data-c="${c.id}"><i class="cdot-s" style="--c:${c.color}"></i>${esc(c.name)}${obj.cat===c.id?' <b>✓</b>':''}</button>`).join('')
+    + `<button role="menuitemradio" aria-checked="${!catOf(obj)}" data-act="catSet" data-k="${k}" data-id="${id}" data-c=""><i class="cdot-s none"></i>없음${!catOf(obj)?' <b>✓</b>':''}</button>`;
+  document.body.appendChild(pop);
+  const r = anchor.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+  let left = r.left + window.scrollX, top = r.bottom + window.scrollY + 6;
+  if (left + pw > window.scrollX + innerWidth - 8) left = window.scrollX + innerWidth - pw - 8;
+  if (r.bottom + ph + 6 > innerHeight) top = r.top + window.scrollY - ph - 6;
+  pop.style.left = Math.max(8, left) + 'px'; pop.style.top = top + 'px';
+  const first = pop.querySelector('button'); if (first) first.focus();
+}
+function closeCatPop(){ const p = document.getElementById('catPop'); if (p) p.remove(); }
+function taskRow(t, opt = {}){
+  const done = isDone(t.id), d = taskDate(t);
+  return `<div class="item ${done?'done':''}">
+    <button class="ck ${done?'on':''}" data-act="taskToggle" data-id="${t.id}" aria-pressed="${done}" aria-label="${esc(t.title)} 완료">${CHECK}</button>
+    ${catDot(t,'task')}<div class="tx"><span class="tt ed" data-k="task" data-id="${t.id}" data-act="inlineEdit" tabindex="0" title="눌러서 수정">${esc(t.title)}</span> ${d ? (done ? `<span class="tag gr">${fmtMD(d)}</span>` : ddayTag(d)) : ''}
+      ${opt.month ? `<span class="tag gr">${t.m}월</span>` : ''}
+      ${t.note ? `<span class="nt">${esc(t.note)}</span>` : ''}</div>
+    <span class="acts-i"><button class="icon-btn" data-act="taskEdit" data-id="${t.id}" aria-label="${esc(t.title)} 수정">수정</button><button class="icon-btn del" data-act="taskDel" data-id="${t.id}" aria-label="${esc(t.title)} 삭제" title="삭제">🗑️</button></span>
+  </div>`;
+}
+
+/* ===== 학생·기록 ===== */
+const stu = id => S.students.find(s => s.id === id);
+const goalOf = (s, gid) => s && (s.goals || []).find(g => g.id === gid);
+const obsOf = gid => S.obs.filter(o => o.gid === gid).sort((a,b) => a.t - b.t);
+const trackList = s => (s.track || '').split(/[,，、]/).map(x => x.trim()).filter(Boolean);
+function goalSentence(g){
+  const t = (g.text || '').trim();
+  return t && !/[.!?。]$/.test(t) ? t + '.' : t;
+}
+const RECENT = 10;
+function goalStats(g){
+  const all = obsOf(g.id);
+  const last = all.slice(-RECENT);
+  const by = LV.map((_,i) => last.filter(o => o.l === i).length);
+  return {all, last, by, ind: by[0]};
+}
+function composeEvaluation(f){
+  const context = String(f.evalContext || '').trim().replace(/[.!?。]+$/,'');
+  const action = String(f.evalAction || '').trim().replace(/[.!?。]+$/,'');
+  return context && action ? `${context} ${action}.` : '';
+}
+function evaluationChecks(f){
+  const notes = [];
+  const goal = String(f.text || '').trim();
+  const evalText = String(f.evaluation || '').trim();
+  if (goal && /수\s*있/.test(goal)) notes.push('학기 목표는 ‘~할 수 있다’ 대신 ‘~한다.’처럼 써 주세요.');
+  else if (goal && !/다\.$/.test(goalSentence(f))) notes.push('학기 목표의 끝맺음을 ‘~한다.’ 형태로 확인해 주세요.');
+  if (!evalText) return notes;
+  if (!evalText.endsWith('.')) notes.push('평가 문장은 마침표로 마무리해 주세요.');
+  const last = evalText.replace(/[.!?。\s]+$/,'').at(-1);
+  const code = last ? last.charCodeAt(0) : 0;
+  if (code < 0xAC00 || code > 0xD7A3 || (code - 0xAC00) % 28 !== 16) notes.push('평가의 끝맺음을 ‘~함.’ 형태로 확인해 주세요.');
+  if (/도움을 받아|지원을 받아|촉진을 받아|촉구를 받아|교사와 함께|어려움|못함|안 함|불가능|필요함|이해함|익힘|파악함|수\s*있음|해 봄|하기를 함/.test(evalText)) notes.push('실제로 관찰한 학생의 행동을 중심으로 쓰고 부정적·수동적·추상적 표현을 살펴봐 주세요.');
+  if (evalText.includes(',')) notes.push('쉼표는 3개 이상을 나열할 때만 사용해 주세요.');
+  if (/[·“”‘’○△□/+%=~()<>!?;:]/.test(evalText)) notes.push('나이스 입력 전 특수문자를 확인해 주세요. 마침표와 필요한 쉼표만 사용합니다.');
+  return notes;
+}
+
+/* ===== 화면: 공통 ===== */
+let ui = {homeMonth:null, docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null};
+function renderNav(r){
+  $('#nav').innerHTML = NAV.map(([k,l,sh,ic]) => `<a href="#${k}" class="${r===k?'on':''}" ${r===k?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg><span class="lf">${l}</span><span class="ls">${sh}</span></a>`).join('');
+}
+const VIEWS = {home:vHome, cal:vCal, stu:vStu, doc:vDoc, iep:vIep, obs:vObs, set:vSet};
+let lastRoute = null;
+const routeFromHash = () => { try { const h = (location.hash || '').slice(1); return VIEWS[h] ? h : 'home'; } catch(e){ return 'home'; } };
+let curRoute = routeFromHash();
+// 미리보기 창처럼 주소(#)가 바뀌지 않는 곳에서도 메뉴가 움직이도록 직접 화면을 바꿈
+function go(r){
+  curRoute = VIEWS[r] ? r : 'home';
+  try { if (location.hash !== '#' + curRoute) history.pushState(null, '', '#' + curRoute); } catch(e){}
+  render();
+}
+function render(){
+  let r = curRoute;
+  if (!VIEWS[r]) r = 'home';
+  closeCatPop();
+  renderNav(r);
+  $('#view').innerHTML = VIEWS[r]();
+  if (r !== lastRoute){ window.scrollTo(0,0); lastRoute = r; }
+  if (r === 'cal' && ui.focusMonth){
+    const el = document.getElementById('m' + ui.focusMonth);
+    if (el) el.scrollIntoView({block:'start'});
+    ui.focusMonth = null;
+  }
+}
+
+/* ===== 홈 ===== */
+function yearStrip(){
+  const cur = new Date().getMonth()+1;
+  return `<div class="yr" aria-label="한 해 업무 진행">
+    <div class="yr-sem"><span>1학기</span><span>2학기·학년말</span></div>
+    <div class="yr-row">${ORDER.map(m => {
+      const ts = tasksOf(m), dn = ts.filter(t => isDone(t.id)).length;
+      const pct = ts.length ? Math.round(dn / ts.length * 100) : 0;
+      const sel = (ui.homeMonth || cur) === m;
+      return `<button class="${m===cur?'now':''} ${sel?'sel':''}" data-act="pickMonth" data-m="${m}" aria-pressed="${sel}" aria-label="${m}월 업무 ${ts.length}개 중 ${dn}개 완료">
+        <span class="mo">${m}월</span><span class="cnt">${dn}/${ts.length}</span><span class="bar"><i style="width:${pct}%"></i></span></button>`;
+    }).join('')}</div></div>`;
+}
+function todoRow(x){
+  return `<div class="item ${x.done?'done':''}">
+    <button class="ck ${x.done?'on':''}" data-act="todoToggle" data-id="${x.id}" aria-pressed="${x.done}" aria-label="${esc(x.text)} 완료">${CHECK}</button>
+    ${catDot(x,'todo')}<div class="tx"><span class="tt ed" data-k="todo" data-id="${x.id}" data-act="inlineEdit" tabindex="0" title="눌러서 수정">${esc(x.text)}</span> ${x.date ? (x.done ? `<span class="tag gr">${fmtMD(x.date)}</span>` : ddayTag(x.date)) : ''}</div>
+    <button class="icon-btn del" data-act="todoDel" data-id="${x.id}" aria-label="${esc(x.text)} 삭제" title="삭제">🗑️</button></div>`;
+}
+function eventsMap(){
+  const evs = {};
+  S.tasks.forEach(x => { const d = taskDate(x); if (d && passCat(x)) (evs[d] ||= []).push({k:'task', x, done:isDone(x.id), title:x.title}); });
+  S.todos.forEach(x => { if (x.date && passCat(x)) (evs[x.date] ||= []).push({k:'todo', x, done:x.done, title:x.text}); });
+  Object.values(evs).forEach(l => l.sort((a,b) => a.done - b.done));
+  return evs;
+}
+function weekBoard(){
+  const off = ui.weekOff || 0, t = todayStr(), evs = eventsMap();
+  const start = weekStart(new Date()); start.setDate(start.getDate() + off*7);
+  const days = [...Array(7)].map((_,i) => { const d = new Date(start); d.setDate(d.getDate()+i); return d; });
+  const label = off === 0 ? '이번 주' : off === 1 ? '다음 주' : off === -1 ? '지난주' : `${days[0].getMonth()+1}월 ${days[0].getDate()}일 주`;
+  const item = e => `<div class="wi ${e.done?'done':''}">
+      <button class="ck sm ${e.done?'on':''}" data-act="${e.k==='task'?'taskToggle':'todoToggle'}" data-id="${e.x.id}" aria-pressed="${e.done}" aria-label="${esc(e.title)} 완료">${CHECK}</button>
+      ${catDot(e.x, e.k)}<span class="tt ed ${e.k==='task'?'is-task':''}" data-k="${e.k}" data-id="${e.x.id}" data-act="inlineEdit" tabindex="0" title="눌러서 수정">${esc(e.title)}</span>
+      <button class="icon-btn del" data-act="${e.k==='task'?'taskDel':'todoDel'}" data-id="${e.x.id}" aria-label="${esc(e.title)} 삭제" title="삭제">🗑️</button></div>`;
+  return `<section class="panel week-panel">
+    <h2><span>날짜별 할 일 <span class="small muted">${label} · ${days[0].getMonth()+1}/${days[0].getDate()} ~ ${days[6].getMonth()+1}/${days[6].getDate()}</span></span>
+      <span class="row"><button class="btn sm ghost" data-act="weekMove" data-n="-1" aria-label="지난주">‹</button>${off!==0?'<button class="btn sm ghost" data-act="weekMove" data-n="0">이번 주</button>':''}<button class="btn sm ghost" data-act="weekMove" data-n="1" aria-label="다음 주">›</button></span></h2>
+    ${catFilterBar()}
+    <div class="week">${days.map(d => {
+      const k = ymd(d), list = evs[k] || [], w = d.getDay();
+      return `<div class="wd ${k===t?'today':''} ${w===0||w===6?'wkend':''} ${k<t?'past':''}">
+        <div class="wh"><b class="${w===0?'sun':w===6?'sat':''}">${DOW[w]}</b> <span class="wdn">${d.getMonth()+1}/${d.getDate()}</span>${k===t?' <span class="tag y">오늘</span>':''}${list.length?`<span class="wc">${list.filter(e=>!e.done).length}</span>`:''}</div>
+        <div class="wl">${list.length ? list.map(item).join('') : '<div class="wempty">없음</div>'}</div>
+        <form data-form="dayTodo" data-date="${k}" class="wadd"><input type="text" name="text" placeholder="+ 할 일" aria-label="${d.getMonth()+1}월 ${d.getDate()}일 할 일 추가" required></form>
+      </div>`;
+    }).join('')}</div>
+    <div class="legend"><span>색 점을 누르면 카테고리 변경 · ‘+ 할 일’에 적고 Enter → 그날에 추가 · 글자를 누르면 바로 수정</span></div>
+  </section>`;
+}
+function todoGroups(todos){
+  const t = todayStr(), groups = new Map();
+  todos.forEach(x => {
+    let g;
+    if (!x.date) g = '날짜 없음';
+    else { const n = dayDiff(x.date); g = n < 0 && !x.done ? '날짜 지남' : n === 0 ? '오늘' : n === 1 ? '내일' : fmtMDw(x.date); }
+    if (!groups.has(g)) groups.set(g, []); groups.get(g).push(x);
+  });
+  const order = k => k === '날짜 지남' ? 0 : k === '오늘' ? 1 : k === '내일' ? 2 : k === '날짜 없음' ? 9 : 3;
+  return [...groups.entries()].sort((a,b) => order(a[0]) - order(b[0]) || (a[1][0].date||'').localeCompare(b[1][0].date||''))
+    .map(([g,l]) => `<div class="tg ${g==='날짜 지남'?'late':g==='오늘'?'now':''}">${g}<span>${l.length}</span></div>${l.map(todoRow).join('')}`).join('');
+}
+function monthCal(vm, showUndated = true, autoSelectToday = true){
+  const y = vm >= 3 ? schoolYear() : schoolYear()+1;
+  const first = new Date(y, vm-1, 1), days = new Date(y, vm, 0).getDate(), t = todayStr();
+  const key = d => `${y}-${pad(vm)}-${pad(d)}`;
+  if (ui.homeDay == null || (ui.homeDay && !ui.homeDay.startsWith(`${y}-${pad(vm)}-`))) ui.homeDay = autoSelectToday && t.startsWith(`${y}-${pad(vm)}-`) ? t : '';
+  const evs = eventsMap();
+  let cells = DOW.map((w,i) => `<div class="dw ${i===0?'sun':i===6?'sat':''}">${w}</div>`).join('');
+  for (let i = 0; i < first.getDay(); i++) cells += '<div></div>';
+  for (let d = 1; d <= days; d++){
+    const k = key(d), list = evs[k] || [], wd = (first.getDay() + d - 1) % 7;
+    cells += `<button class="day ${k===t?'today':''} ${k===ui.homeDay?'on':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="pickDay" data-d="${k}" aria-label="${vm}월 ${d}일${list.length?`, 일정 ${list.length}개`:''}">
+      <span class="dn">${d}</span>
+      ${list.slice(0,2).map(e => { const c = catOf(e.x); return `<span class="ev ${e.done?'dd':''}" style="--c:${c?c.color:'#B8C2CC'}">${esc(e.title)}</span>`; }).join('')}
+      ${list.length>2 ? `<span class="evm">+${list.length-2}</span>` : ''}
+      ${list.length ? `<span class="pips">${list.slice(0,3).map(e => { const c = catOf(e.x); return `<i style="background:${c?c.color:'#B8C2CC'}"></i>`; }).join('')}</span>` : ''}</button>`;
+  }
+  let detail = '';
+  if (ui.homeDay){
+    const list = evs[ui.homeDay] || [];
+    detail = `<div class="day-detail"><div class="sec-t" style="margin-top:6px">${fmtMDw(ui.homeDay)}</div>
+      ${list.length ? list.map(e => e.k==='task' ? taskRow(e.x) : todoRow(e.x)).join('') : '<div class="small muted" style="padding:4px 0 8px">이 날은 정해 둔 일이 없어요.</div>'}
+      <form class="add-row day-add" data-form="dayTodo" data-date="${ui.homeDay}">
+        <input type="text" name="text" placeholder="이 날 할 일 적기" aria-label="${fmtMD(ui.homeDay)} 할 일" required>
+        <button class="btn" type="submit">할 일 추가</button>
+        <button class="btn ghost" type="button" data-act="taskNew" data-m="${vm}" data-d="${ui.homeDay}">업무로 추가</button>
+      </form></div>`;
+  } else {
+    detail = `<div class="small muted" style="margin:6px 0 4px">날짜를 누르면 그날 할 일을 보고 추가할 수 있어요.</div>`;
+  }
+  const undated = tasksOf(vm).filter(x => !x.due && passCat(x));
+  return `<div class="mcal">${cells}</div>${detail}
+    ${showUndated && undated.length ? `<div class="sec-t">날짜 없는 ${vm}월 업무</div>${undated.map(x => taskRow(x)).join('')}` : ''}`;
+}
+function vHome(){
+  const now = new Date(), cm = now.getMonth()+1, t = todayStr();
+  const vm = ui.homeMonth || cm;
+  const prevMonth = vm === 1 ? 12 : vm - 1;
+  const nextMonth = vm === 12 ? 1 : vm + 1;
+  const viewYear = vm >= 3 ? schoolYear() : schoolYear() + 1;
+  const evs = eventsMap();
+  // 오늘과 놓친 일
+  const todayList = evs[t] || [];
+  const late = [];
+  let oldCount = 0;   // 30일보다 오래된 놓친 업무는 업무 달력에서 정리
+  S.tasks.forEach(x => { const d = taskDate(x); if (d && d < t && !isDone(x.id) && passCat(x)){ if (dayDiff(d) >= -30) late.push({k:'task', x, d}); else oldCount++; } });
+  S.todos.forEach(x => { if (x.date && x.date < t && !x.done && passCat(x)) late.push({k:'todo', x, d:x.date}); });
+  late.sort((a,b) => a.d.localeCompare(b.d));
+  const idx = ORDER.indexOf(cm);
+  const pastMonth = oldCount + S.tasks.filter(x => !x.due && ORDER.indexOf(x.m) < idx && !isDone(x.id) && passCat(x)).length;
+  // 날짜 없는 일
+  const monthUndated = tasksOf(cm).filter(x => !x.due && passCat(x));
+  const someday = S.todos.filter(x => !x.date && passCat(x) && (!x.done || (x.doneAt && dayDiff(x.doneAt) >= -1))).sort((a,b) => a.done - b.done);
+  const todayLeft = todayList.filter(e => !e.done).length;
+  const weekBegin = weekStart(now), weekEnd = new Date(weekBegin);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+  const weekLeft = Object.entries(evs).filter(([date]) => date >= ymd(weekBegin) && date <= ymd(weekEnd))
+    .reduce((count, [, items]) => count + items.filter(item => !item.done).length, 0);
+
+  const ss = S.students;
+  const noEvac = ss.filter(s => !(s.evacHelper||'').trim()).length;
+  const noMeal = ss.filter(s => !(s.meal||'').trim()).length;
+  const noGoal = ss.filter(s => !(s.goals||[]).length).length;
+  const obsToday = S.obs.filter(o => o.d === t).length + S.beh.filter(b => b.d === t).length;
+  const real = ss.filter(s => !s.demo).length;
+  const needBackup = real && (S.lastExport ? dayDiff(S.lastExport) < -30 : (S.createdAt && dayDiff(S.createdAt) < -7));
+  const row = e => e.k === 'task' ? taskRow(e.x) : todoRow(e.x);
+  const lateRow = e => e.k === 'task' ? taskRow(e.x)
+    : todoRow(e.x).replace('<button class="icon-btn del"', `<button class="btn sm ghost" data-act="todoToday" data-id="${e.x.id}">오늘로</button><button class="icon-btn del"`);
+
+  return `
+  <header class="ph"><div>
+    <div class="today-line">${schoolYear()}학년도 · ${cm}월</div>
+    <h1>${now.getMonth()+1}월 ${now.getDate()}일 ${DOW[now.getDay()]}요일${S.settings.className ? `, ${esc(S.settings.className)}` : ''}</h1>
+    <div class="sub">${todayLeft ? `오늘 할 일 ${todayLeft}개` : '오늘 남은 일이 없어요'}${late.length ? ` · <b style="color:var(--red)">놓친 일 ${late.length}개</b>` : ''}</div>
+  </div></header>
+  <div class="quick-actions" aria-label="자주 쓰는 기능">
+    <button type="button" data-act="taskNew"><span class="quick-icon" aria-hidden="true">＋</span><span>업무 추가</span></button>
+    <button type="button" data-act="stuNew"><span class="quick-icon" aria-hidden="true">＋</span><span>학생 카드 추가</span></button>
+    <a href="#obs"><span class="quick-icon" aria-hidden="true">●</span><span>관찰 기록</span></a>
+    <a href="#doc"><span class="quick-icon" aria-hidden="true">▤</span><span>서류 만들기</span></a>
+  </div>
+  ${!S.welcomed ? `<section class="note welcome">
+    <h2>처음 사용하시나요?</h2>
+    <div>학생 카드를 적으면 필요한 서류와 관찰 기록에 연결돼요. 기록은 이 기기 브라우저에 저장되므로, 학생은 실명 대신 별칭으로 적어 주세요.</div>
+    <div class="row"><button class="btn" data-act="welcomeOk">알겠어요</button><button class="btn ghost" data-act="demoAdd">예시 학생으로 둘러보기</button></div>
+  </section>` : ''}
+  ${!canStore ? `<section class="note warn"><b>이 창에서는 기록이 저장되지 않아요.</b> 미리보기 창처럼 저장이 막힌 곳에서 열려 있어요. 지금 적은 내용은 창을 닫으면 사라지니, 파일을 크롬·엣지 같은 브라우저로 열거나 사이트 주소로 접속해서 써 주세요.</section>` : ''}
+  ${needBackup ? `<section class="note warn"><b>백업한 지 오래됐어요.</b> 브라우저 기록을 지우면 학생 카드와 관찰 기록도 함께 지워져요. <a href="#set">설정에서 백업 파일 받기</a></section>` : ''}
+  <div class="grid home-top">
+    <section class="panel today-panel">
+      <h2>오늘 <span class="small muted">${fmtMDw(t)}</span></h2>
+      <form class="add-row today-add" data-form="dayTodo" data-date="${t}">
+        <input type="text" name="text" placeholder="오늘 할 일을 적고 Enter" aria-label="오늘 할 일 추가" required>
+        <button class="btn" type="submit">추가</button>
+      </form>
+      ${late.length ? `<div class="tg late">놓친 일<span>${late.length}</span></div>${late.map(lateRow).join('')}` : ''}
+      ${todayList.length ? `<div class="tg now">오늘<span>${todayList.length}</span></div>${todayList.map(row).join('')}`
+        : `<div class="empty" style="margin-top:10px">${late.length ? '오늘로 정한 일은 아직 없어요.' : '오늘 할 일이 없어요. 위 입력칸에 새 할 일을 적어 보세요.'}</div>`}
+      ${pastMonth ? `<div class="small muted" style="margin-top:10px">지난달까지 남은 업무 ${pastMonth}개 · <a href="#cal" data-act="goMonth" data-m="${cm}">업무 달력에서 확인</a></div>` : ''}
+    </section>
+    <section class="panel home-month">
+      <h2><span>${viewYear}년 ${vm}월</span><span class="row">
+        <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${prevMonth}" aria-label="이전 달">‹</button>
+        ${vm !== cm ? `<button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${cm}">이번 달</button>` : ''}
+        <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${nextMonth}" aria-label="다음 달">›</button>
+      </span></h2>
+      ${monthCal(vm, false, false)}
+      <a class="more month-link" href="#cal" data-act="goMonth" data-m="${vm}">한 해 업무 달력 보기 →</a>
+    </section>
+  </div>
+  <section class="panel week-summary">
+    <div><h2>이번 주 일정</h2><p>${weekLeft ? `남은 일 ${weekLeft}개` : '남은 일이 없어요'}</p></div>
+    <button class="btn ghost" type="button" data-act="toggleWeek" aria-expanded="${!!ui.weekOpen}">${ui.weekOpen ? '주간 일정 접기' : '주간 일정 펼치기'}</button>
+  </section>
+  ${ui.weekOpen ? weekBoard() : ''}
+  <section class="panel home-someday">
+    <h2>날짜 없는 일 <a class="more" href="#cal" data-act="goMonth" data-m="${cm}">업무 달력</a></h2>
+    ${monthUndated.length ? `<div class="tg">${cm}월 안에 할 업무<span>${monthUndated.length}</span></div>${monthUndated.map(x => taskRow(x)).join('')}` : ''}
+    <div class="tg">언젠가 할 일<span>${someday.filter(x=>!x.done).length}</span></div>
+    ${someday.length ? someday.map(todoRow).join('') : '<div class="small muted" style="padding:6px 0">날짜를 정하지 않은 일을 적어 두는 곳이에요.</div>'}
+    <form class="add-row someday-add" data-form="todo">
+      <input type="text" name="text" placeholder="날짜 없이 적어 두기" aria-label="언젠가 할 일 추가" required>
+      <input type="hidden" name="date" value="">
+      <button class="btn ghost" type="submit">추가</button>
+    </form>
+  </section>
+  <div class="grid">
+    <section class="panel">
+      <h2>우리 반 한눈에 <a class="more" href="#stu">학생 카드</a></h2>
+      ${ss.length ? `
+        <div class="item"><div class="tx">학생 카드</div><b>${ss.length}명</b></div>
+        <div class="item"><div class="tx">오늘 관찰 기록</div><b>${obsToday}건</b></div>
+        ${noEvac ? `<div class="item"><div class="tx">대피 담당자를 안 정한 학생</div><span class="tag red">${noEvac}명</span></div>` : ''}
+        ${noMeal ? `<div class="item"><div class="tx">식사 형태를 안 적은 학생</div><span class="tag y">${noMeal}명</span></div>` : ''}
+        ${noGoal ? `<div class="item"><div class="tx">개별화 목표가 없는 학생</div><span class="tag y">${noGoal}명</span></div>` : ''}
+        ${!noEvac && !noMeal && !noGoal ? `<div class="item"><div class="tx">빠진 정보</div><span class="tag g">없음</span></div>` : ''}
+        <div class="row" style="margin-top:10px"><a class="btn sm" href="#obs">관찰 기록하기</a><a class="btn sm ghost" href="#iep">IEP 문구</a></div>`
+      : `<div class="empty">학생 카드를 만들면 서류가 자동으로 만들어져요.</div>
+         <div class="row" style="margin-top:10px"><button class="btn sm" data-act="stuNew">학생 추가</button>${S.students.some(s=>s.demo)?'':'<button class="btn sm ghost" data-act="demoAdd">예시 학생 넣기</button>'}</div>`}
+    </section>
+    <section class="panel">
+      <h2>바로 출력하기</h2>
+      <div class="row">${DOCS.map(d => `<button class="btn sm ghost" data-act="docGo" data-k="${d.k}">${d.name}</button>`).join('')}</div>
+    </section>
+  </div>`;
+}
+
+/* ===== 업무 달력 ===== */
+function vCal(){
+  const cm = new Date().getMonth()+1;
+  const vm = ui.homeMonth || cm;
+  const idx = ORDER.indexOf(cm);
+  const overdue = S.tasks.filter(x => ORDER.indexOf(x.m) < idx && !isDone(x.id) && passCat(x));
+  const up = [];
+  S.tasks.forEach(x => { const d = taskDate(x); if (d && !isDone(x.id) && passCat(x) && dayDiff(d) <= 30 && dayDiff(d) >= 0) up.push({d, title:x.title, kind:'업무', x}); });
+  S.todos.forEach(x => { if (x.date && !x.done && passCat(x) && dayDiff(x.date) <= 30 && dayDiff(x.date) >= 0) up.push({d:x.date, title:x.text, kind:'할 일', x}); });
+  up.sort((a,b) => a.d.localeCompare(b.d));
+  return `<header class="ph"><div><h1>업무 달력</h1>
+    <div class="sub">${schoolYear()}학년도 (3월 ~ 다음 해 2월). 달을 누르면 날짜별로 보여요.</div></div>
+    <div class="acts"><button class="btn ghost" data-act="icsExport">폰 캘린더로 보내기</button><button class="btn" data-act="taskNew">업무 추가</button></div></header>
+  ${yearStrip()}
+  <div class="grid">
+    <section class="panel">
+      <h2><span style="white-space:nowrap">${vm}월</span> ${vm!==cm?`<button class="btn sm ghost" data-act="pickMonth" data-m="${cm}">이번 달로</button>`:''}</h2>
+      ${monthCal(vm)}
+      ${overdue.length ? `<div class="sec-t" style="color:var(--red)">지난달까지 남은 업무</div>${overdue.slice(0,6).map(x => taskRow(x,{month:true})).join('')}<div class="row" style="margin-top:8px">${overdue.length>6?`<span class="small muted">외 ${overdue.length-6}개는 아래 한 해 목록에 있어요</span>`:''}<button class="btn sm ghost" data-act="pastDone">지난 업무 모두 완료로 표시</button></div>` : ''}
+    </section>
+    <section class="panel">
+      <h2>다가오는 일 <span class="small muted">30일 안</span></h2>
+      ${up.length ? up.slice(0,12).map(x => `<div class="item"><div class="tx">${(c => `<i class="cdot-s ${c?'':'none'}" style="${c?`--c:${c.color}`:''}"></i>`)(catOf(x.x))}<span class="tt">${esc(x.title)}</span>
+        <span class="nt">${fmtMDw(x.d)} · ${x.kind}</span></div>${ddayTag(x.d)}</div>`).join('') : `<div class="empty">30일 안에 마감인 일이 없어요.</div>`}
+      <div class="hint" style="margin-top:10px">알림이 필요하면 ‘폰 캘린더로 보내기’로 받은 파일을 폰에서 열어 주세요. 날짜가 있는 일이 캘린더에 들어가고 전날 아침에 알려 줘요.</div>
+    </section>
+  </div>
+  <h2 class="sec-h">한 해 업무 목록</h2>
+  <div class="months">${ORDER.map(m => {
+    const ts = tasksOf(m), dn = ts.filter(t => isDone(t.id)).length;
+    return `<section class="month ${m===cm?'now':''}" id="m${m}"><h3><span class="mn">${m}월</span><span class="small muted">${dn}/${ts.length} 완료</span></h3>
+      ${ts.length ? ts.map(t => taskRow(t,{edit:true})).join('') : '<div class="small muted" style="padding:8px 0">업무 없음</div>'}
+      <button class="btn sm ghost" style="margin-top:8px" data-act="taskNew" data-m="${m}">${m}월에 추가</button></section>`;
+  }).join('')}</div>`;
+}
+function exportIcs(){
+  const t = todayStr(), items = [];
+  S.tasks.forEach(x => { const d = taskDate(x); if (d && d >= t && !isDone(x.id)) items.push({id:x.id, d, title:x.title, note:x.note}); });
+  S.todos.forEach(x => { if (x.date && x.date >= t && !x.done) items.push({id:x.id, d:x.date, title:x.text}); });
+  if (!items.length){ toast('보낼 일정이 없어요. 날짜가 있는 할 일이나 업무를 먼저 적어 주세요'); return; }
+  const ic = v => String(v||'').replace(/\\/g,'\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g,'\\n');
+  const dd = s => s.replace(/-/g,'');
+  const next = s => { const x = parseYmd(s); x.setDate(x.getDate()+1); return dd(ymd(x)); };
+  const stamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//tdesk//KO','CALSCALE:GREGORIAN','X-WR-CALNAME:업무수첩'];
+  items.forEach(it => lines.push('BEGIN:VEVENT', `UID:${it.id}-${dd(it.d)}@tdesk`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${dd(it.d)}`, `DTEND;VALUE=DATE:${next(it.d)}`,
+    `SUMMARY:${ic(it.title)}`, ...(it.note ? [`DESCRIPTION:${ic(it.note)}`] : []),
+    'BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${ic(it.title)}`,'TRIGGER:-PT15H','END:VALARM','END:VEVENT'));
+  lines.push('END:VCALENDAR');
+  const blob = new Blob([lines.join('\r\n')], {type:'text/calendar'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `업무수첩-일정-${dd(t)}.ics`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast(`일정 ${items.length}개를 캘린더 파일로 받았어요`);
+}
+function taskDialog(t, m, preset){
+  const isNew = !t;
+  t = t || {m: m || new Date().getMonth()+1, title:'', due:'', note:''};
+  const dateVal = t.due ? taskDate(t) : (preset || '');
+  openDlg(`<form method="dialog" data-form="task" data-id="${isNew?'':t.id}">
+    <div class="dlg-h">${isNew?'업무 추가':'업무 수정'}<button type="button" class="icon-btn" data-act="dlgClose" aria-label="닫기">닫기</button></div>
+    <div class="dlg-b">
+      <label class="f"><span>업무 이름</span><input name="title" value="${esc(t.title)}" required></label>
+      <div class="two">
+        <label class="f"><span>달</span><select name="m">${ORDER.map(x => `<option value="${x}" ${x==t.m?'selected':''}>${x}월</option>`).join('')}</select></label>
+        <label class="f"><span>마감 날짜 (선택)</span><input type="date" name="due" value="${dateVal}"><div class="hint">해마다 같은 날짜로 반복돼요</div></label>
+      </div>
+      <div class="f"><span class="flbl">카테고리</span><div class="cat-radios">${[...S.cats, {id:'', name:'없음'}].map(c => `<label class="cr"><input type="radio" name="cat" value="${c.id}" ${(t.cat||'')===c.id || (isNew && !t.cat && c.id === (ui.catFilter && ui.catFilter!=='none' ? ui.catFilter : '')) ?'checked':''}><i class="cdot-s ${c.id?'':'none'}" style="${c.color?`--c:${c.color}`:''}"></i>${esc(c.name)}</label>`).join('')}</div></div>
+      <label class="f"><span>메모 (선택)</span><input name="note" value="${esc(t.note)}"></label>
+    </div>
+    <div class="dlg-f">${isNew?'':`<button type="button" class="btn ghost left" data-act="taskDel" data-id="${t.id}">🗑️ 삭제</button>`}
+      <button type="button" class="btn ghost" data-act="dlgClose">취소</button><button class="btn" type="submit">저장</button></div>
+  </form>`);
+}
+
+/* ===== 학생 카드 ===== */
+function vStu(){
+  const ss = S.students;
+  return `<header class="ph"><div><h1>학생 카드</h1>
+    <div class="sub">한 번 적어 두면 서류 만들기·IEP 문구·관찰 기록에서 함께 써요.</div></div>
+    <div class="acts">${ss.some(s=>s.demo) ? '<button class="btn ghost" data-act="demoDel">예시 학생 지우기</button>' : '<button class="btn ghost" data-act="demoAdd">예시 학생 넣기</button>'}
+    <button class="btn" data-act="stuNew">학생 추가</button></div></header>
+  ${ss.length ? `<div class="cards">${ss.map(s => {
+    const warn = [];
+    if (!(s.evacHelper||'').trim()) warn.push('<span class="tag red">대피 담당 없음</span>');
+    if (!(s.meal||'').trim()) warn.push('<span class="tag y">식사 형태 없음</span>');
+    return `<article class="st">
+      <div class="nm"><span>${esc(s.alias)}</span><span class="small muted">${esc(s.grade||'')}${s.demo?' · 예시':''}</span></div>
+      ${warn.length ? `<div class="row">${warn.join('')}</div>` : ''}
+      <dl><dt>의사소통</dt><dd>${nil(s.comm)}</dd><dt>식사</dt><dd>${nil(s.meal)}${(s.avoid||'').trim()?` · 피할 음식 ${esc(s.avoid)}`:''}</dd>
+        <dt>대피</dt><dd>${nil(s.evacHelper)}</dd><dt>목표</dt><dd>${(s.goals||[]).length}개</dd></dl>
+      <div class="row"><button class="btn sm ghost" data-act="stuEdit" data-id="${s.id}">수정</button>
+        <button class="btn sm ghost" data-act="iepGo" data-id="${s.id}">목표·문구</button>
+        <button class="btn sm ghost" data-act="obsGo" data-id="${s.id}">관찰 기록</button></div></article>`;
+  }).join('')}</div>`
+  : `<div class="panel"><div class="empty">아직 학생 카드가 없어요. ‘학생 추가’로 시작하거나, 예시 학생을 넣어 어떻게 쓰는지 먼저 둘러보세요.</div></div>`}`;
+}
+function stuDialog(s){
+  const isNew = !s; s = s || {};
+  let html = '', buf = [];
+  const flush = () => { if (buf.length){ html += `<div class="two">${buf.join('')}</div>`; buf = []; } };
+  FIELDS.forEach(f => {
+    if (f.sec){ flush(); html += `<div class="sec-t">${f.sec}</div>`; return; }
+    const v = esc(s[f.k] || '');
+    const input = f.ta ? `<textarea name="${f.k}" placeholder="${esc(f.p)}">${v}</textarea>` : `<input name="${f.k}" value="${v}" placeholder="${esc(f.p)}" ${f.req?'required':''}>`;
+    const el = `<label class="f"><span>${f.l}${f.req?'':''}</span>${input}${f.hint?`<div class="hint">${f.hint}</div>`:''}</label>`;
+    if (f.half) buf.push(el); else { flush(); html += el; }
+  });
+  flush();
+  openDlg(`<form method="dialog" data-form="stu" data-id="${s.id||''}">
+    <div class="dlg-h">${isNew?'학생 추가':'학생 카드 수정'}<button type="button" class="icon-btn" data-act="dlgClose" aria-label="닫기">닫기</button></div>
+    <div class="dlg-b"><div class="hint" style="margin-top:8px">부르는 이름만 꼭 적으면 돼요. 나머지는 아는 만큼 적고 나중에 채워도 괜찮아요.</div>${html}</div>
+    <div class="dlg-f">${isNew?'':`<button type="button" class="btn ghost left" data-act="stuDel" data-id="${s.id}">학생 지우기</button>`}
+      <button type="button" class="btn ghost" data-act="dlgClose">취소</button><button class="btn" type="submit">저장</button></div>
+  </form>`);
+}
+
+/* ===== 서류 ===== */
+function docStudents(){
+  const sel = ui.docSel;
+  return S.students.filter(s => !sel || sel.includes(s.id));
+}
+function docHTML(k){
+  const list = docStudents();
+  const cls = esc(S.settings.className || ''), tch = esc(S.settings.teacher || '');
+  const meta = `${cls}${cls && tch ? ' · ' : ''}${tch ? '담임 ' + tch : ''}${cls||tch ? ' · ' : ''}${fmtMD(todayStr())} 기준`;
+  const d = DOCS.find(x => x.k === k);
+  if (!list.length) return `<div class="empty">학생을 한 명 이상 골라 주세요.</div>`;
+  const row = (l, v, key) => `<div class="doc-row ${key?'key':''}"><b>${l}</b><div>${nil(v)}</div></div>`;
+  let body = '';
+  if (k === 'beh'){
+    body = list.map(s => `<div class="doc-card"><h3>${esc(s.alias)} 행동지원 카드 <small>${esc(s.grade||'')}</small></h3>
+      ${row('의사소통', s.comm)}${row('좋아하는 것', s.likes)}${row('힘들어하는 것', s.hard)}
+      ${row('힘들 때 신호', s.signs)}${row('이렇게 도와주세요', s.respond, true)}${row('진정하는 방법', s.calm)}
+      ${row('피해야 할 음식', s.avoid)}${row('건강·투약', s.health)}${row('연락할 사람', s.contact)}</div>`).join('');
+  } else if (k === 'inc'){
+    body = list.map(s => `<div class="doc-card"><h3>${esc(s.alias)} 통합학급 안내 <small>${esc(s.inclusion||'')}</small></h3>
+      ${row('의사소통', s.comm)}${row('좋아하는 것', s.likes)}${row('힘들어하는 것', s.hard)}
+      ${row('수업에서 도와주는 방법', s.inclusionTips, true)}${row('힘들 때 신호', s.signs)}${row('이럴 땐 이렇게', s.respond)}
+      ${row('이동', s.mobility)}${row('연락할 사람', s.contact)}</div>`).join('');
+  } else if (k === 'evac'){
+    body = `<table class="doc-t"><thead><tr><th>학생</th><th>이동</th><th>대피 담당</th><th>대체 담당</th><th>주의</th><th>확인</th></tr></thead><tbody>
+      ${list.map(s => `<tr><td><b>${esc(s.alias)}</b></td><td>${nil(s.mobility)}</td><td>${nil(s.evacHelper)}</td><td>${nil(s.evacBackup)}</td><td>${nil(s.evacNote)}</td><td class="sign"></td></tr>`).join('')}</tbody></table>`;
+  } else if (k === 'meal'){
+    body = `<table class="doc-t"><thead><tr><th>학생</th><th>식사 형태</th><th>피해야 할 음식</th><th>식사 도움</th><th>건강·투약</th></tr></thead><tbody>
+      ${list.map(s => `<tr><td><b>${esc(s.alias)}</b></td><td>${nil(s.meal)}</td><td>${(s.avoid||'').trim()?`<b style="color:#B3261E">${esc(s.avoid)}</b>`:'<span class="nil">—</span>'}</td><td>${nil(s.mealHelp)}</td><td>${nil(s.health)}</td></tr>`).join('')}</tbody></table>`;
+  } else if (k === 'sub'){
+    body = `${(S.settings.routine||'').trim() ? `<div class="routine"><b>학급 일과</b>\n${esc(S.settings.routine)}</div>` : `<div class="routine nil">학급 일과는 설정에서 적으면 여기에 나와요.</div>`}
+      <table class="doc-t"><thead><tr><th>학생</th><th>의사소통</th><th>힘들 때 신호</th><th>이렇게 도와주세요</th><th>진정 방법</th></tr></thead><tbody>
+      ${list.map(s => `<tr><td><b>${esc(s.alias)}</b></td><td>${nil(s.comm)}</td><td>${nil(s.signs)}</td><td>${nil(s.respond)}</td><td>${nil(s.calm)}</td></tr>`).join('')}</tbody></table>`;
+  } else if (k === 'goals'){
+    body = list.map(s => `<div class="doc-card"><h3>${esc(s.alias)} 개별화 목표 <small>${esc(s.grade||'')}</small></h3>
+      ${(s.goals||[]).length ? `<table class="doc-t"><thead><tr><th style="width:110px">교과·영역</th><th>목표</th><th style="width:22%">평가 방법</th></tr></thead><tbody>
+      ${s.goals.map(g => `<tr><td>${esc(g.subj)}</td><td>${esc(goalSentence(g))}</td><td>${esc(g.method||'')}</td></tr>`).join('')}</tbody></table>`
+      : '<div class="nil">아직 목표가 없어요.</div>'}</div>`).join('');
+  }
+  return `<div class="doc"><h2 class="doc-title">${d.name}</h2><div class="doc-meta">${meta}</div>${body}</div>`;
+}
+function vDoc(){
+  if (!DOCS.some(d => d.k === ui.docType)) ui.docType = 'beh';
+  if (ui.docSel) ui.docSel = ui.docSel.filter(id => stu(id));
+  const ss = S.students;
+  return `<header class="ph"><div><h1>서류 만들기</h1><div class="sub">학생 카드 내용으로 바로 만들어요. 고칠 내용은 학생 카드에서 고치면 모든 서류에 함께 반영돼요.</div></div>
+    <div class="acts"><button class="btn ghost" data-act="docCopy" ${ss.length?'':'disabled'}>글로 복사</button><button class="btn" data-act="docPrint" ${ss.length?'':'disabled'}>인쇄하기</button></div></header>
+  <div class="doc-types" role="radiogroup" aria-label="서류 종류">${DOCS.map(d => `<button role="radio" aria-checked="${ui.docType===d.k}" class="${ui.docType===d.k?'on':''}" data-act="docType" data-k="${d.k}"><b>${d.name}</b><span>${d.desc}</span></button>`).join('')}</div>
+  ${ss.length ? `<div class="panel" style="margin-bottom:14px"><div class="row" style="justify-content:space-between;margin-bottom:8px"><b>넣을 학생</b>
+      <span class="row"><button class="btn sm ghost" data-act="docAll">모두</button><button class="btn sm ghost" data-act="docNone">모두 빼기</button></span></div>
+    <div class="chips">${ss.map(s => { const on = !ui.docSel || ui.docSel.includes(s.id); return `<button class="chip ${on?'on':''}" aria-pressed="${on}" data-act="docPick" data-id="${s.id}">${esc(s.alias)}</button>`; }).join('')}</div></div>
+    <div class="paper" id="docPreview">${docHTML(ui.docType)}</div>`
+  : `<div class="panel"><div class="empty">학생 카드가 있어야 서류를 만들 수 있어요.</div><div class="row" style="margin-top:10px"><button class="btn sm" data-act="stuNew">학생 추가</button><button class="btn sm ghost" data-act="demoAdd">예시 학생 넣기</button></div></div>`}`;
+}
+
+/* ===== IEP 문구 ===== */
+function blankForm(){ return {subj:'국어', text:'', method:'관찰 평가', evalContext:'', evalAction:'', evaluation:''}; }
+function vIep(){
+  const ss = S.students;
+  if (ui.iepSid && !stu(ui.iepSid)) ui.iepSid = null;
+  if (!ui.iepSid && ss.length) ui.iepSid = ss[0].id;
+  const s = stu(ui.iepSid);
+  if (ui.iepGid !== 'new' && !goalOf(s, ui.iepGid)) { ui.iepGid = 'new'; ui.form = null; }
+  if (!ui.form) ui.form = ui.iepGid === 'new' ? blankForm() : {...goalOf(s, ui.iepGid)};
+  const f = ui.form;
+  return `<header class="ph"><div><h1>IEP 목표·평가 문구</h1><div class="sub">교육 목표를 적고 실제로 관찰한 활동과 행동으로 평가 문구를 작성해요.</div></div></header>
+  <div class="iep">
+    <aside class="panel">
+      ${ss.length ? `<label class="f" style="margin:0"><span>학생</span><select data-act="iepStu">${ss.map(x => `<option value="${x.id}" ${x.id===ui.iepSid?'selected':''}>${esc(x.alias)}</option>`).join('')}</select></label>
+      <div class="goal-list">${(s.goals||[]).map(g => `<button class="${ui.iepGid===g.id?'on':''}" data-act="iepGoal" data-id="${g.id}"><small>${esc(g.subj)}</small>${esc(g.text)}</button>`).join('')}
+        <button class="${ui.iepGid==='new'?'on':''}" data-act="iepGoal" data-id="new"><small>새 목표</small>새로 만들기</button></div>`
+      : `<div class="empty">학생이 아직 없어요. 오른쪽에서 학생 별칭과 교육 목표를 적으면 함께 저장돼요.</div>`}
+    </aside>
+    <div class="col">
+      <section class="panel">
+        <form id="iepForm" data-form="iep">
+          ${!ss.length ? `<label class="f"><span>학생 별칭</span><input name="studentAlias" placeholder="예: 1번, 민○" autocomplete="off" required>
+            <div class="hint">실명 대신 번호나 별칭을 권장해요. 자세한 학생 정보는 나중에 카드에서 적을 수 있어요.</div></label>` : ''}
+          <div class="two">
+            <label class="f"><span>교과·영역</span><select name="subj">${SUBJECTS.map(x => `<option ${x===f.subj?'selected':''}>${x}</option>`).join('')}</select></label>
+            <label class="f"><span>평가 방법</span><select name="method">${METHODS.map(x => `<option ${x===f.method?'selected':''}>${x}</option>`).join('')}</select></label>
+          </div>
+          <label class="f"><span>교육 목표</span><input name="text" value="${esc(f.text)}" placeholder="예: 자신의 이름을 보고 쓴다." autocomplete="off">
+            <div class="hint" id="textHint">학생의 현행 수준에 맞는 관찰 가능한 목표를 ‘~한다.’ 형태로 적어 주세요.</div></label>
+          <div class="sec-t">실제로 관찰한 내용</div>
+          <div class="hint" style="margin-bottom:12px">목표만으로 평가를 만들지 않아요. 학생이 참여한 활동과 실제로 한 행동을 적어 주세요.</div>
+          <label class="f"><span>활동·상황</span><input name="evalContext" value="${esc(f.evalContext||'')}" placeholder="예: 교실 물건 그림을 보고" autocomplete="off"></label>
+          <label class="f"><span>학생의 행동·표현</span><input name="evalAction" value="${esc(f.evalAction||'')}" placeholder="예: 해당 물건을 가리키며 이름을 말함" autocomplete="off">
+            <div class="hint">눈길, 몸짓, 말, 참여 과정 등 직접 본 내용을 적어 주세요.</div></label>
+          <div class="row" style="margin-bottom:13px"><button class="btn ghost" type="button" data-act="makeEval">관찰 내용으로 문장 만들기</button></div>
+          <label class="f"><span>평가 문구</span><textarea name="evaluation" rows="4" placeholder="실제 관찰을 바탕으로 작성하거나 위 버튼으로 문장을 만든 뒤 고쳐 주세요.">${esc(f.evaluation||'')}</textarea>
+            <div class="hint">‘~함.’으로 마무리하고 목표의 어미만 바꾼 문장은 피하세요. 여러 문장이면 한 문장씩 줄을 바꿔 주세요.</div></label>
+          <div class="row">
+            <button class="btn" type="submit">${!ss.length ? '학생과 목표 함께 저장' : ui.iepGid==='new' ? `${esc(s.alias)} 목표·평가 저장` : '고친 내용 저장'}</button>
+            ${ui.iepGid!=='new' ? `<button class="btn ghost" type="button" data-act="goalDel">목표 지우기</button><button class="btn ghost" type="button" data-act="obsGo" data-id="${s.id}">관찰 기록하러 가기</button>` : ''}
+          </div>
+        </form>
+      </section>
+      ${!storageOk ? `<section class="note warn"><b>이 창에서는 자동 저장이 안 돼요.</b> 일반 브라우저에서 파일을 열어 사용하거나 설정에서 백업 파일을 받아 주세요.</section>` : ''}
+      <section class="panel"><h2>문구 검토</h2><div id="iepOut">${iepOut()}</div></section>
+    </div>
+  </div>`;
+}
+function iepOut(){
+  const f = ui.form;
+  const g = {...f, text: f.text || ''};
+  if (!g.text.trim() && !(g.evaluation||'').trim()) return `<div class="empty">교육 목표와 관찰 내용을 적으면 이곳에서 검토할 수 있어요.</div>`;
+  const s = stu(ui.iepSid), saved = ui.iepGid !== 'new' ? goalOf(s, ui.iepGid) : null;
+  const st = saved ? goalStats({...g, id:saved.id}) : null;
+  const box = (lbl, txt, cls='', liveCopy=false) => `<div class="out ${cls}"><div class="lbl"><span>${lbl}</span><button type="button" class="btn sm ghost" data-act="${liveCopy?'copyEval':'copyOut'}" ${liveCopy?'':`data-t="${esc(txt)}"`}>복사</button></div><p>${esc(txt)}</p></div>`;
+  let html = g.text.trim() ? box('교육 목표', goalSentence(g)) : '';
+  if (st){
+    const lastDots = st.last.map(o => `<span class="dot" title="${LV[o.l].full}" style="background:${LV[o.l].c}"></span>`).join('');
+    const summary = LV.map((l,i) => st.by[i] ? `${l.full} ${st.by[i]}회` : '').filter(Boolean).join(' · ');
+    html += `<div class="data-box"><b>도움 수준 기록</b> 전체 ${st.all.length}회${st.last.length ? ` · 최근 ${st.last.length}회: ${summary}` : ' · 아직 기록이 없어요'}
+      ${st.last.length ? `<div class="dots" style="margin-top:6px">${lastDots}</div>` : ''}<div class="hint">이 횟수만으로 달성 여부나 평가 문장을 결정하지 않아요.</div></div>`;
+  }
+  html += (g.evaluation||'').trim() ? box('평가 문구 초안', g.evaluation.trim(), 'rec', true)
+    : `<div class="empty">평가 문구는 아직 없어요. 실제 관찰한 내용을 적어 주세요.</div>`;
+  const notes = evaluationChecks(g);
+  if (notes.length) html += `<div class="note warn iep-check"><b>확인할 점</b><ul>${notes.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  html += `<div class="hint">2026학년도 나이스 작성 기준 참고 · 참여 과정과 관찰 가능한 행동을 쉬운 우리말로 구체적으로 적고 마지막에는 학생의 실제 수행과 오탈자를 확인해 주세요. 학교생활기록부에는 그대로 옮기지 말고 해당 기재 기준에 맞게 다시 검토하세요.</div>`;
+  return html;
+}
+function saveIepGoal(data){
+  const s = stu(ui.iepSid);
+  if (!s){ toast('저장할 학생을 먼저 추가해 주세요'); return false; }
+  const g = {id:data.id, subj:data.subj||'국어', text:String(data.text||'').trim(), method:data.method||'관찰 평가',
+    evalContext:String(data.evalContext||'').trim(), evalAction:String(data.evalAction||'').trim(), evaluation:String(data.evaluation||'').trim()};
+  if (!g.text){ toast('교육 목표를 먼저 적어 주세요'); return false; }
+  if (ui.iepGid === 'new'){
+    g.id = uid(); s.goals = [...(s.goals||[]), g]; ui.iepGid = g.id;
+  } else {
+    const i = (s.goals||[]).findIndex(x => x.id === ui.iepGid);
+    if (i < 0){ toast('저장할 목표를 찾지 못했어요. 다시 선택해 주세요'); return false; }
+    g.id = ui.iepGid; s.goals[i] = g;
+  }
+  ui.form = {...g};
+  const stored = save();
+  toast(stored ? '목표와 평가 문구를 저장했어요' : '이 창에는 저장할 수 없어요. 일반 브라우저에서 다시 열어 주세요');
+  render();
+  return true;
+}
+
+/* ===== 관찰 기록 ===== */
+function weekStart(d){ const x = new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate() - (x.getDay()+6)%7); return x; }
+function weekChart(g){
+  const obs = obsOf(g.id); const W = 8; const ws = weekStart(new Date());
+  const weeks = [];
+  for (let i = W-1; i >= 0; i--){ const s = new Date(ws); s.setDate(s.getDate() - i*7); weeks.push(s); }
+  const data = weeks.map(s => { const e = new Date(s); e.setDate(e.getDate()+7);
+    const o = obs.filter(x => x.t >= s.getTime() && x.t < e.getTime()); return {s, n:o.length, ok:o.filter(x => x.l === 0).length}; });
+  const w = 320, h = 104, bw = w / W;
+  return `<svg class="chart" viewBox="0 -14 ${w} ${h+44}" role="img" aria-label="최근 8주 스스로 한 비율">
+    <line x1="0" y1="${h}" x2="${w}" y2="${h}" stroke="#C9D3DB"/>
+    ${data.map((d,i) => { const p = d.n ? d.ok/d.n : 0; const bh = Math.max(d.n?3:0, p*h);
+      return `<rect x="${i*bw+7}" y="${h-bh}" width="${bw-14}" height="${bh}" rx="3" fill="${d.n?'#2B6CCB':'#fff'}"/>
+      ${d.n?`<text x="${i*bw+bw/2}" y="${h-bh-4}" font-size="10" text-anchor="middle" fill="#55626E">${Math.round(p*100)}%</text>`:''}
+      <text x="${i*bw+bw/2}" y="${h+14}" font-size="10" text-anchor="middle" fill="#87939E">${d.s.getMonth()+1}/${d.s.getDate()}</text>
+      <text x="${i*bw+bw/2}" y="${h+26}" font-size="9" text-anchor="middle" fill="#A9B3BC">${d.n?d.n+'회':''}</text>`; }).join('')}
+  </svg>`;
+}
+function behChart(sid, label){
+  const days = []; const base = parseYmd(todayStr());
+  for (let i = 9; i >= 0; i--){ const d = new Date(base); d.setDate(d.getDate()-i); days.push(ymd(d)); }
+  const counts = days.map(d => S.beh.filter(b => b.sid===sid && b.label===label && b.d===d).length);
+  const max = Math.max(3, ...counts), w = 200, h = 40, bw = w/10;
+  return `<svg class="chart" viewBox="0 0 ${w} ${h+12}" style="max-width:220px" role="img" aria-label="최근 10일 ${esc(label)} 횟수">
+    ${counts.map((c,i) => `<rect x="${i*bw+3}" y="${h - (c/max)*h}" width="${bw-6}" height="${(c/max)*h}" rx="2" fill="${i===9?'#C93C34':'#E8A19B'}"/>`).join('')}
+    <line x1="0" y1="${h}" x2="${w}" y2="${h}" stroke="#C9D3DB"/>
+    <text x="0" y="${h+11}" font-size="9" fill="#87939E">${fmtMD(days[0])}</text><text x="${w}" y="${h+11}" font-size="9" text-anchor="end" fill="#87939E">오늘</text></svg>`;
+}
+function vObs(){
+  const ss = S.students;
+  if (ui.obsSid && !stu(ui.obsSid)) ui.obsSid = null;
+  if (!ui.obsSid && ss.length) ui.obsSid = ss[0].id;
+  const s = stu(ui.obsSid), t = todayStr();
+  if (!ss.length) return `<header class="ph"><div><h1>관찰 기록</h1></div></header><div class="panel"><div class="empty">학생 카드와 개별화 목표가 있으면 수업 중에 버튼 하나로 기록할 수 있어요.</div><div class="row" style="margin-top:10px"><button class="btn sm" data-act="stuNew">학생 추가</button><button class="btn sm ghost" data-act="demoAdd">예시 학생 넣기</button></div></div>`;
+  const goals = s.goals || [], tracks = trackList(s);
+  return `<header class="ph"><div><h1>관찰 기록</h1><div class="sub">수업 중에 학생이 보인 도움 수준을 누르면 한 번으로 기록돼요.</div></div></header>
+  <div class="chips" style="margin-bottom:14px" role="tablist" aria-label="학생">${ss.map(x => `<button class="chip ${x.id===ui.obsSid?'on':''}" role="tab" aria-selected="${x.id===ui.obsSid}" data-act="obsStu" data-id="${x.id}">${esc(x.alias)}</button>`).join('')}</div>
+  ${goals.length ? goals.map(g => {
+    const all = obsOf(g.id), today = all.filter(o => o.d === t), last = all.slice(-20);
+    const st = goalStats(g);
+    return `<section class="goal-card">
+      <h3>${esc(goalSentence(g))}</h3>
+      <div class="gmeta">${esc(g.subj)} · 오늘 ${today.length}회 · 전체 ${all.length}회${st.last.length?` · 최근 ${st.last.length}회 중 스스로 ${st.ind}회`:''}</div>
+      <div class="lvs">${LV.map((l,i) => `<button class="lv" style="background:${l.c}" data-act="rec" data-g="${g.id}" data-l="${i}">${l.short}</button>`).join('')}</div>
+      <div class="obs-foot">
+        <div><div class="small muted" style="margin-bottom:4px">최근 기록 ${last.length ? `(${last.length}회)` : ''}</div>
+          <div class="dots">${last.length ? last.map(o => `<span class="dot" title="${fmtMD(o.d)} ${LV[o.l].full}" style="background:${LV[o.l].c}"></span>`).join('') : '<span class="small muted">아직 기록이 없어요</span>'}</div>
+          <div class="row" style="margin-top:8px">${all.length ? `<button class="btn sm ghost" data-act="recUndo" data-g="${g.id}">마지막 기록 지우기</button>` : ''}<button class="btn sm ghost" data-act="iepGoalGo" data-sid="${s.id}" data-id="${g.id}">평가 문구 보기</button></div></div>
+        <div><div class="small muted">주별 스스로 한 비율</div>${weekChart(g)}</div>
+      </div></section>`;
+  }).join('') : `<div class="panel" style="margin-bottom:12px"><div class="empty">${esc(s.alias)} 학생의 개별화 목표가 아직 없어요. IEP 문구에서 목표를 만들면 여기서 기록할 수 있어요.</div><div class="row" style="margin-top:10px"><button class="btn sm" data-act="iepGo" data-id="${s.id}">목표 만들기</button></div></div>`}
+  <div class="legend">${LV.map(l => `<span><i style="background:${l.c}"></i>${l.full}</span>`).join('')}</div>
+  <section class="panel" style="margin-top:14px"><h2>행동 횟수 <span class="small muted">오늘</span></h2>
+    ${tracks.length ? tracks.map(lb => {
+      const n = S.beh.filter(b => b.sid===s.id && b.label===lb && b.d===t).length;
+      return `<div class="beh"><div style="flex:1;min-width:0"><b>${esc(lb)}</b>${behChart(s.id, lb)}</div>
+        <div class="row"><button class="btn sm ghost" data-act="behUndo" data-l="${esc(lb)}" ${n?'':'disabled'} aria-label="${esc(lb)} 한 번 빼기">−1</button>
+        <span class="n">${n}</span><button class="btn" data-act="behAdd" data-l="${esc(lb)}" aria-label="${esc(lb)} 한 번 더하기">+1</button></div></div>`;
+    }).join('') : `<div class="empty">학생 카드의 ‘관찰 기록할 행동’에 쉼표로 적으면 여기서 횟수를 셀 수 있어요. <button class="btn sm ghost" data-act="stuEdit" data-id="${s.id}">학생 카드 수정</button></div>`}
+  </section>`;
+}
+
+/* ===== 설정 ===== */
+function vSet(){
+  const st = S.settings;
+  const size = (() => { try { return Math.round((localStorage.getItem(KEY)||'').length/1024); } catch(e){ return 0; } })();
+  return `<header class="ph"><div><h1>설정·백업</h1><div class="sub">고친 내용은 바로 저장돼요.</div></div></header>
+  <div class="grid">
+    <div class="col">
+      <section class="panel"><h2>학급 정보</h2>
+        <form data-form="settings">
+          <div class="two"><label class="f"><span>학급 이름</span><input name="className" value="${esc(st.className)}" placeholder="예: 중학교 1학년 2반"></label>
+          <label class="f"><span>담임</span><input name="teacher" value="${esc(st.teacher)}" placeholder="예: 김○○"></label></div>
+          <label class="f"><span>학급 일과</span><textarea name="routine" rows="6" placeholder="예:&#10;08:50 등교·아침 열기&#10;09:00 1교시&#10;12:10 점심 (식사 지도)&#10;14:40 하교 준비 → 통학버스">${esc(st.routine)}</textarea><div class="hint">보결 학급 안내에 들어가요</div></label>
+        </form>
+      </section>
+    </div>
+    <div class="col">
+      <section class="panel"><h2>백업</h2>
+        <p class="small" style="margin-top:0">기록은 이 기기 브라우저에만 있어요. 브라우저 기록을 지우거나 다른 컴퓨터로 옮기면 사라지니, 가끔 백업 파일을 받아 두세요. 백업 파일에는 학생 정보가 들어 있으니 학교 업무용 저장소에 보관해 주세요.</p>
+        <div class="row"><button class="btn" data-act="export">백업 파일 받기</button><button class="btn ghost" data-act="import">백업 파일 불러오기</button></div>
+        <div class="hint">마지막 백업: ${S.lastExport ? fmtMD(S.lastExport) : '아직 없음'} · 저장된 양 약 ${size}KB</div>
+      </section>
+      <section class="panel"><h2>업무 카테고리</h2>
+        <p class="small" style="margin-top:0">할 일과 업무를 색으로 나눠요. 이름은 고쳐 쓰고, 색은 동그라미를 눌러 고르세요.</p>
+        ${S.cats.map(c => `<div class="cat-row">
+          <input class="cat-name" data-cat-name="${c.id}" value="${esc(c.name)}" aria-label="카테고리 이름">
+          <div class="pal">${PALETTE.map(col => `<button class="pal-c ${c.color===col?'on':''}" style="--c:${col}" data-act="catColor" data-c="${c.id}" data-col="${col}" aria-label="색 ${col}" aria-pressed="${c.color===col}"></button>`).join('')}</div>
+          <button class="icon-btn del" data-act="catDel" data-c="${c.id}" aria-label="${esc(c.name)} 카테고리 삭제" title="삭제">🗑️</button></div>`).join('')}
+        <button class="btn sm ghost" style="margin-top:8px" data-act="catAdd">카테고리 추가</button>
+      </section>
+      <section class="panel"><h2>정리</h2>
+        <div class="row">
+          ${S.students.some(s=>s.demo)?'<button class="btn ghost" data-act="demoDel">예시 학생 지우기</button>':''}
+          <button class="btn ghost" data-act="tasksReset">업무 달력 기본값으로</button>
+          <button class="btn danger" data-act="wipe">이 기기의 기록 모두 지우기</button>
+        </div>
+        <div class="hint">여러 사람이 쓰는 컴퓨터라면 사용 후 기록을 지워 주세요.</div>
+      </section>
+    </div>
+  </div>`;
+}
+
+/* ===== 바로 수정 ===== */
+function startInline(span){
+  if (span.querySelector('input')) return;
+  const k = span.dataset.k, id = span.dataset.id;
+  const obj = k === 'task' ? S.tasks.find(t => t.id === id) : S.todos.find(t => t.id === id);
+  if (!obj) return;
+  const old = k === 'task' ? obj.title : obj.text;
+  const inp = document.createElement('input');
+  inp.className = 'ie'; inp.value = old; inp.setAttribute('aria-label', '내용 수정');
+  span.replaceWith(inp); inp.focus(); inp.select();
+  let finished = false, pending = false;
+  const finish = (saveIt) => {
+    if (finished) return; finished = true;
+    const v = inp.value.trim();
+    if (saveIt && v && v !== old){
+      if (k === 'task') obj.title = v; else obj.text = v;
+      save(); toast('수정했어요');
+    }
+    render();
+  };
+  inp.addEventListener('keydown', e => {
+    e.stopPropagation();
+    if (e.key === 'Escape'){ e.preventDefault(); finish(false); return; }
+    if (e.key === 'Enter' || e.keyCode === 229){
+      if (e.isComposing || e.keyCode === 229){ if (e.key === 'Enter') pending = true; return; }
+      e.preventDefault(); finish(true);
+    }
+  });
+  inp.addEventListener('compositionend', () => { if (pending){ pending = false; setTimeout(() => finish(true), 0); } });
+  inp.addEventListener('blur', () => setTimeout(() => finish(true), 0));
+  inp.addEventListener('click', e => e.stopPropagation());
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCatPop(); ui._popFor = null; } });
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.tt.ed')){ e.preventDefault(); startInline(e.target); }
+});
+
+/* ===== 예시 학생 ===== */
+function demoAdd(){
+  if (S.students.some(s => s.demo)) { toast('예시 학생이 이미 있어요'); return; }
+  const a = {id:uid(), demo:true, alias:'예시-민', grade:'중1-2', comm:'짧은 말(2~3낱말)로 말하고, 고를 때는 그림 카드를 함께 써요', likes:'버스 영상, 퍼즐, 스티커', hard:'큰 소리, 갑작스러운 일정 변경',
+    signs:'귀를 막고 같은 말을 반복해요', respond:'조용한 목소리로 다음 일정을 그림 카드로 보여 주고, 말을 줄이고 기다려 주세요', calm:'쉼 공간에서 5분 쉬기, 버스 그림책 보기', track:'자리 이탈, 소리 지르기',
+    mobility:'혼자 걷기 (계단은 손잡이 사용)', meal:'일반식', mealHelp:'숟가락 사용, 국은 덜어 주기', avoid:'', health:'',
+    evacHelper:'담임', evacBackup:'실무사 ○○○', evacNote:'사이렌 소리에 놀라므로 귀마개 챙기기', inclusion:'1-3반 음악', inclusionTips:'앞자리에 앉고, 활동 순서를 그림으로 미리 보여 주기', contact:'담임 교실 내선 ○○○',
+    goals:[{id:uid(), subj:'국어', text:'자신의 이름을 바르게 쓸 수 있다.', method:'관찰 평가'},
+           {id:uid(), subj:'진로와 직업', text:'버스 번호를 보고 타야 할 버스를 고를 수 있다.', method:'수행 평가'}]};
+  const b = {id:uid(), demo:true, alias:'예시-준', grade:'중1-2', comm:'눈 맞춤과 소리로 표현하고, 예/아니요는 손을 들어 답해요', likes:'음악, 비눗방울', hard:'오래 같은 자세로 있기',
+    signs:'몸을 뒤로 젖히고 소리를 크게 내요', respond:'자세를 바꿔 주고, 좋아하는 노래를 짧게 들려주세요', calm:'창가로 이동해 음악 듣기', track:'',
+    mobility:'수동 휠체어 (밀어 주기 필요)', meal:'다진식', mealHelp:'전체 도움, 한 숟가락씩 천천히', avoid:'견과류', health:'점심 후 약 먹기 (보건실 보관)',
+    evacHelper:'사회복무요원 ○○○', evacBackup:'', evacNote:'엘리베이터 사용 금지, 1층 경사로로 이동', inclusion:'', inclusionTips:'', contact:'담임 교실 내선 ○○○',
+    goals:[{id:uid(), subj:'의사소통', text:'원하는 것을 두 가지 그림 중에서 가리킬 수 있다.', method:'관찰 평가'}]};
+  const c = {id:uid(), demo:true, alias:'예시-서', grade:'중1-2', comm:'문장으로 말할 수 있어요', likes:'그림 그리기, 칭찬 도장', hard:'순서 기다리기',
+    signs:'자리에서 일어나 교실을 돌아다녀요', respond:'기다리는 시간을 타이머로 보여 주고, 기다리면 바로 칭찬해 주세요', calm:'물 마시기, 숫자 세기', track:'자리 이탈',
+    mobility:'혼자 걷기', meal:'', mealHelp:'', avoid:'', health:'', evacHelper:'', evacBackup:'', evacNote:'', inclusion:'1-3반 체육', inclusionTips:'모둠 활동 때 짝을 정해 주기', contact:'',
+    goals:[]};
+  S.students.push(a, b, c);
+  // 지난 5주 기록 만들기 (조금씩 나아지는 모습)
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  const now = new Date();
+  for (let i = 0; i < 22; i++){
+    const d = new Date(now); d.setDate(d.getDate() - Math.round(35 - i*1.6)); d.setHours(10, 0, 0, 0);
+    const p = i / 22; const r = rnd();
+    const l = r < 0.15 + p*0.45 ? 0 : r < 0.5 + p*0.35 ? 1 : r < 0.85 ? 2 : 3;
+    S.obs.push({id:uid(), sid:a.id, gid:a.goals[0].id, l, t:d.getTime() + i, d:ymd(d)});
+    if (i % 2 === 0){ const r2 = rnd(); S.obs.push({id:uid(), sid:a.id, gid:a.goals[1].id, l: r2 < .3 ? 1 : r2 < .7 ? 2 : 3, t:d.getTime()+50+i, d:ymd(d)}); }
+  }
+  for (let i = 0; i < 9; i++){
+    const d = new Date(now); d.setDate(d.getDate() - i);
+    const n = Math.max(0, Math.round(4 - i*0.2 + (rnd()-.5)*3) - (i===0?3:0));
+    for (let k = 0; k < n; k++) S.beh.push({id:uid(), sid:a.id, label:'자리 이탈', d:ymd(d), t:d.getTime()+k});
+  }
+  S.welcomed = true; save(); toast('예시 학생 3명을 넣었어요'); render();
+}
+function demoDel(){
+  const ids = S.students.filter(s => s.demo).map(s => s.id);
+  S.students = S.students.filter(s => !s.demo);
+  S.obs = S.obs.filter(o => !ids.includes(o.sid)); S.beh = S.beh.filter(b => !ids.includes(b.sid));
+  save(); toast('예시 학생을 지웠어요'); render();
+}
+
+/* ===== 대화상자 ===== */
+function openDlg(html){ const d = $('#dlg'); d.innerHTML = html; d.showModal(); const f = d.querySelector('input,select,textarea'); if (f) f.focus(); }
+function closeDlg(){ const d = $('#dlg'); if (d.open) d.close(); }
+
+/* ===== 사건 처리 ===== */
+document.addEventListener('click', async e => {
+  if (!e.target.closest('#catPop') && !e.target.closest('.cdot')) { closeCatPop(); ui._popFor = null; }
+  const b = e.target.closest('[data-act]');
+  if (!b){
+    const a = e.target.closest('a[href^="#"]');
+    if (a){ e.preventDefault(); go(a.getAttribute('href').slice(1)); }
+    return;
+  }
+  const a = b.dataset.act, id = b.dataset.id;
+  if (b.tagName === 'SELECT') return;
+  switch (a){
+    case 'welcomeOk': S.welcomed = true; save(); render(); break;
+    case 'demoAdd': demoAdd(); break;
+    case 'demoDel': if (await ask('예시 학생과 그 기록을 지울까요?', '지우기')) demoDel(); break;
+    case 'goMonth': e.preventDefault(); ui.homeMonth = +b.dataset.m; go('cal'); break;
+    case 'taskToggle': { const l = doneList(); const i = l.indexOf(id); if (i >= 0) l.splice(i,1); else l.push(id); save(); render(); break; }
+    case 'pastDone': { const idx = ORDER.indexOf(new Date().getMonth()+1); const l = doneList();
+      if (await ask('지난달까지의 업무를 모두 완료로 표시할까요? 이 학년도 중간부터 쓰기 시작했다면 정리에 편해요.', '완료로 표시', false)) { S.tasks.forEach(t => { if (ORDER.indexOf(t.m) < idx && !l.includes(t.id)) l.push(t.id); }); save(); render(); } break; }
+    case 'icsExport': exportIcs(); break;
+    case 'todoToday': { const x = S.todos.find(y => y.id === id); if (x){ x.date = todayStr(); save(); toast('오늘로 옮겼어요'); render(); } break; }
+    case 'pickMonth': ui.homeMonth = +b.dataset.m; ui.homeDay = null; render(); break;
+    case 'toggleWeek': ui.weekOpen = !ui.weekOpen; render(); break;
+    case 'weekMove': ui.weekOff = +b.dataset.n === 0 ? 0 : (ui.weekOff||0) + +b.dataset.n; render(); break;
+    case 'inlineEdit': startInline(b); break;
+
+    case 'catPick': e.stopPropagation(); if (document.getElementById('catPop') && ui._popFor === b.dataset.id) { closeCatPop(); ui._popFor = null; } else { catPopup(b); ui._popFor = b.dataset.id; } break;
+    case 'catSet': { const k = b.dataset.k, obj = k === 'task' ? S.tasks.find(t => t.id === b.dataset.id) : S.todos.find(t => t.id === b.dataset.id);
+      if (obj){ obj.cat = b.dataset.c; save(); } closeCatPop(); ui._popFor = null; render(); break; }
+    case 'catFilter': ui.catFilter = b.dataset.c || null; render(); break;
+    case 'catColor': { const c = S.cats.find(x => x.id === b.dataset.c); if (c){ c.color = b.dataset.col; save(); render(); } break; }
+    case 'catAdd': { const used = S.cats.map(c => c.color); S.cats.push({id:uid(), name:'새 카테고리', color: PALETTE.find(x => !used.includes(x)) || PALETTE[0]}); save(); render();
+      const ins = document.querySelectorAll('.cat-name'); const last = ins[ins.length-1]; if (last){ last.focus(); last.select(); } break; }
+    case 'catDel': { const c = S.cats.find(x => x.id === b.dataset.c); if (c && await ask(`‘${c.name}’ 카테고리를 삭제할까요? 이 카테고리의 할 일과 업무는 ‘없음’이 돼요.`, '삭제')){
+      S.cats = S.cats.filter(x => x.id !== c.id); [...S.tasks, ...S.todos].forEach(x => { if (x.cat === c.id) x.cat = ''; }); if (ui.catFilter === c.id) ui.catFilter = null; save(); render(); } break; }
+    case 'pickDay': ui.homeDay = ui.homeDay === b.dataset.d ? null : b.dataset.d; render(); break;
+    case 'taskNew': taskDialog(null, b.dataset.m ? +b.dataset.m : null, b.dataset.d); break;
+    case 'taskEdit': taskDialog(S.tasks.find(t => t.id === id)); break;
+    case 'taskDel': { const i = S.tasks.findIndex(t => t.id === id); if (i < 0) break; const [gone] = S.tasks.splice(i, 1); save(); closeDlg(); render();
+      toast('업무를 삭제했어요', () => { S.tasks.splice(i, 0, gone); save(); render(); }); break; }
+    case 'tasksReset': if (await ask('업무 달력을 기본값으로 되돌릴까요? 직접 추가하거나 고친 업무는 사라져요.', '되돌리기')) { S.tasks = DEFAULT_TASKS.map(t => ({...t})); save(); toast('기본 업무로 되돌렸어요'); render(); } break;
+    case 'todoToggle': { const t = S.todos.find(x => x.id === id); t.done = !t.done; t.doneAt = t.done ? todayStr() : null; save(); render(); break; }
+    case 'todoDel': { const i = S.todos.findIndex(x => x.id === id); if (i < 0) break; const [gone] = S.todos.splice(i, 1); save(); render();
+      toast('할 일을 삭제했어요', () => { S.todos.splice(i, 0, gone); save(); render(); }); break; }
+    case 'stuNew': stuDialog(null); break;
+    case 'stuEdit': stuDialog(stu(id)); break;
+    case 'stuDel': { const s = stu(id); if (s && await ask(`${s.alias} 학생 카드와 관찰 기록을 모두 지울까요?`, '지우기')) {
+        S.students = S.students.filter(x => x.id !== id); S.obs = S.obs.filter(o => o.sid !== id); S.beh = S.beh.filter(x => x.sid !== id);
+        save(); closeDlg(); toast('지웠어요'); render(); } break; }
+    case 'dlgClose': closeDlg(); break;
+    case 'docGo': ui.docType = b.dataset.k; go('doc'); break;
+    case 'docType': ui.docType = b.dataset.k; render(); break;
+    case 'docPick': { let sel = ui.docSel || S.students.map(s => s.id); sel = sel.includes(id) ? sel.filter(x => x !== id) : [...sel, id]; ui.docSel = sel.length === S.students.length ? null : sel; render(); break; }
+    case 'docAll': ui.docSel = null; render(); break;
+    case 'docNone': ui.docSel = []; render(); break;
+    case 'docPrint': { if (!docStudents().length){ toast('학생을 한 명 이상 골라 주세요'); break; } $('#printArea').innerHTML = docHTML(ui.docType); window.print(); break; }
+    case 'docCopy': { const p = $('#docPreview'); if (p) copyText(p.innerText); break; }
+    case 'iepGo': ui.iepSid = id; ui.iepGid = 'new'; ui.form = null; go('iep'); break;
+    case 'iepGoalGo': ui.iepSid = b.dataset.sid; ui.iepGid = id; ui.form = null; go('iep'); break;
+    case 'iepGoal': ui.iepGid = id; ui.form = null; render(); break;
+    case 'goalDel': { const s = stu(ui.iepSid); if (s && await ask('이 목표와 관찰 기록을 지울까요?', '지우기')) {
+        s.goals = s.goals.filter(g => g.id !== ui.iepGid); S.obs = S.obs.filter(o => o.gid !== ui.iepGid); ui.iepGid = 'new'; ui.form = null; save(); render(); } break; }
+    case 'makeEval': {
+      const form = $('#iepForm'), fd = new FormData(form);
+      const draft = composeEvaluation({evalContext:fd.get('evalContext'), evalAction:fd.get('evalAction')});
+      if (!draft){ toast('활동·상황과 학생의 행동·표현을 모두 적어 주세요'); break; }
+      const existing = form.elements.evaluation.value.trim();
+      if (existing && existing !== draft && !(await ask('지금 적은 평가 문구를 새 초안으로 바꿀까요?', '바꾸기', false))) break;
+      form.elements.evaluation.value = draft;
+      ui.form = {...ui.form, subj:fd.get('subj'), method:fd.get('method'), text:fd.get('text'),
+        evalContext:fd.get('evalContext'), evalAction:fd.get('evalAction'), evaluation:draft};
+      $('#iepOut').innerHTML = iepOut();
+      form.elements.evaluation.focus();
+      toast('초안을 만들었어요. 실제 수행에 맞게 확인해 주세요');
+      break;
+    }
+    case 'copyOut': copyText(b.dataset.t); break;
+    case 'copyEval': copyText($('#iepForm').elements.evaluation.value.trim()); break;
+    case 'obsGo': ui.obsSid = id; go('obs'); break;
+    case 'obsStu': ui.obsSid = id; render(); break;
+    case 'rec': { const gid = b.dataset.g, l = +b.dataset.l, now = new Date();
+      S.obs.push({id:uid(), sid:ui.obsSid, gid, l, t:now.getTime(), d:ymd(now)}); save(); render(); toast(`${LV[l].full} 기록했어요`); break; }
+    case 'recUndo': { const list = obsOf(b.dataset.g); const last = list[list.length-1]; if (last){ S.obs = S.obs.filter(o => o.id !== last.id); save(); render(); toast('마지막 기록을 지웠어요'); } break; }
+    case 'behAdd': { const now = new Date(); S.beh.push({id:uid(), sid:ui.obsSid, label:b.dataset.l, d:ymd(now), t:now.getTime()}); save(); render(); break; }
+    case 'behUndo': { const t = todayStr(); const list = S.beh.filter(x => x.sid===ui.obsSid && x.label===b.dataset.l && x.d===t).sort((p,q) => p.t-q.t);
+      const last = list[list.length-1]; if (last){ S.beh = S.beh.filter(x => x.id !== last.id); save(); render(); } break; }
+    case 'export': exportData(); break;
+    case 'import': $('#importFile').click(); break;
+    case 'wipe': if (await ask('이 기기에 저장된 학생 카드, 관찰 기록, 할 일, 업무 달력을 모두 지울까요? 되돌릴 수 없어요.', '모두 지우기')) {
+        try { localStorage.removeItem(KEY); } catch(_){}
+        S = fresh(); ui = {docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null}; save(); toast('모두 지웠어요'); go('home'); } break;
+  }
+});
+
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset.act === 'iepStu'){ ui.iepSid = el.value; ui.iepGid = 'new'; ui.form = null; render(); return; }
+  if (el.dataset && el.dataset.catName){ const c = S.cats.find(x => x.id === el.dataset.catName); if (c){ c.name = el.value.trim() || c.name; save(); toast('저장했어요'); render(); } return; }
+  const f = el.closest('form[data-form="settings"]');
+  if (f){ S.settings[el.name] = el.value; save(); toast('저장했어요'); }
+});
+document.addEventListener('input', e => {
+  const f = e.target.closest('form[data-form="iep"]');
+  if (f){
+    const fd = new FormData(f);
+    ui.form = {...ui.form, subj:fd.get('subj'), method:fd.get('method'), text:fd.get('text'),
+      evalContext:fd.get('evalContext'), evalAction:fd.get('evalAction'), evaluation:fd.get('evaluation')};
+    $('#iepOut').innerHTML = iepOut();
+  }
+});
+
+/* 입력 처리: 미리보기 창처럼 폼 제출이 막힌 곳에서도, 한글 입력 중 Enter에서도 동작하도록 직접 처리 */
+let lastForm = {f:null, t:0};
+function submitForm(f){
+  const now = Date.now();
+  if (lastForm.f === f && now - lastForm.t < 400) return;   // 같은 입력이 두 번 들어가지 않게
+  lastForm = {f, t:now};
+  handleForm(f);
+}
+document.addEventListener('submit', e => {
+  const f = e.target; if (!f.dataset || !f.dataset.form) return;
+  e.preventDefault(); submitForm(f);
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.keyCode !== 13 && e.keyCode !== 229) return;
+  const el = e.target;
+  if (!el || el.tagName !== 'INPUT' || ['checkbox','radio','file','button','submit'].includes(el.type)) return;
+  const f = el.closest('form[data-form]'); if (!f || f.dataset.form === 'settings') return;
+  if (e.isComposing || e.keyCode === 229){
+    if (e.key === 'Enter'){ f._pendingEnter = true; }   // 한글 조합 중 Enter → 조합이 끝나면 처리
+    return;
+  }
+  e.preventDefault(); submitForm(f);
+});
+document.addEventListener('compositionend', e => {
+  const f = e.target && e.target.closest && e.target.closest('form[data-form]');
+  if (f && f._pendingEnter){ f._pendingEnter = false; setTimeout(() => submitForm(f), 0); }
+});
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button[type="submit"]'); if (!btn) return;
+  const f = btn.closest('form[data-form]'); if (!f) return;
+  e.preventDefault(); submitForm(f);
+});
+function handleForm(f){
+  const kind = f.dataset.form; if (!kind) return;
+  const fd = new FormData(f);
+  if (kind === 'todo'){
+    const text = (fd.get('text')||'').trim(); if (!text){ toast('할 일을 적어 주세요'); return; }
+    S.todos.push({id:uid(), text, date:fd.get('date')||'', done:false, cat:ui.catFilter && ui.catFilter!=='none' ? ui.catFilter : ''}); save(); render();
+    const inp = document.querySelector('form[data-form="todo"] input[name="text"]'); if (inp) inp.focus();
+  } else if (kind === 'dayTodo'){
+    const text = (fd.get('text')||'').trim(); if (!text){ toast('할 일을 적어 주세요'); return; }
+    const date = f.dataset.date, wadd = f.classList.contains('wadd');
+    S.todos.push({id:uid(), text, date, done:false, cat:ui.catFilter && ui.catFilter!=='none' ? ui.catFilter : ''}); save(); toast('할 일을 추가했어요'); render();
+    const next = document.querySelector(`form[data-form="dayTodo"][data-date="${date}"]${wadd?'.wadd':':not(.wadd)'} input[name=text]`);
+    if (next) next.focus();
+  } else if (kind === 'task'){
+    const title = (fd.get('title')||'').trim(); if (!title){ toast('업무 이름을 적어 주세요'); return; }
+    const due = fd.get('due') ? fd.get('due').slice(5) : '';
+    const data = {title, m: due ? +due.slice(0,2) : +fd.get('m'), due, note:(fd.get('note')||'').trim(), cat:fd.get('cat')||''};
+    if (f.dataset.id){ Object.assign(S.tasks.find(t => t.id === f.dataset.id), data); }
+    else S.tasks.push({id:uid(), ...data});
+    save(); closeDlg(); toast('저장했어요'); render();
+  } else if (kind === 'stu'){
+    const alias = (fd.get('alias')||'').trim(); if (!alias){ toast('부르는 이름을 적어 주세요'); return; }
+    const data = {}; FIELDS.forEach(x => { if (x.k) data[x.k] = (fd.get(x.k)||'').trim(); });
+    if (f.dataset.id){ Object.assign(stu(f.dataset.id), data); }
+    else { const s = {id:uid(), goals:[], ...data}; S.students.push(s); if (!S.createdAt) S.createdAt = todayStr(); }
+    S.welcomed = true; save(); closeDlg(); toast('저장했어요'); render();
+  } else if (kind === 'iep'){
+    const text = (fd.get('text')||'').trim();
+    if (!text){ toast('교육 목표를 먼저 적어 주세요'); return; }
+    if (!stu(ui.iepSid)){
+      const alias = (fd.get('studentAlias')||'').trim();
+      if (!alias){ toast('학생 별칭을 먼저 적어 주세요'); return; }
+      const s = {id:uid(), alias, goals:[]};
+      S.students.push(s); if (!S.createdAt) S.createdAt = todayStr();
+      S.welcomed = true; ui.iepSid = s.id; ui.iepGid = 'new';
+    }
+    saveIepGoal({id:ui.form?.id, subj:fd.get('subj'), text:fd.get('text'), method:fd.get('method'),
+      evalContext:fd.get('evalContext'), evalAction:fd.get('evalAction'), evaluation:fd.get('evaluation')});
+  }
+}
+
+/* ===== 백업 ===== */
+function exportData(){
+  S.lastExport = todayStr(); save();
+  const blob = new Blob([JSON.stringify(S, null, 1)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `업무수첩-백업-${todayStr().replace(/-/g,'')}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('백업 파일을 받았어요'); render();
+}
+$('#importFile').addEventListener('change', async e => {
+  const file = e.target.files[0]; e.target.value = ''; if (!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    if (!data || data.v !== 1 || !Array.isArray(data.students)) throw new Error('형식');
+    if (!(await ask(`백업 파일을 불러올까요? 지금 이 기기에 있는 기록은 백업 내용으로 바뀌어요.\n(학생 ${data.students.length}명)`, '불러오기', false))) return;
+    S = Object.assign(fresh(), data); save(); ui.form = null; toast('불러왔어요'); render();
+  } catch(err){ toast('업무수첩 백업 파일이 아니에요'); }
+});
+
+window.addEventListener('hashchange', () => { const r = routeFromHash(); if (r !== curRoute){ curRoute = r; render(); } });
+window.addEventListener('popstate', () => { const r = routeFromHash(); if (r !== curRoute){ curRoute = r; render(); } });
+window.addEventListener('afterprint', () => { $('#printArea').innerHTML = ''; });
+render();
+</script>
+</body>
+</html>
