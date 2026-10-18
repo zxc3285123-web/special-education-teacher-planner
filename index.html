@@ -136,7 +136,7 @@ main{padding:28px 32px 64px;max-width:1200px;width:100%}
 .cat-row:first-of-type{border-top:0}
 .cat-name{flex:1;min-width:120px;width:auto}
 .pal{display:flex;gap:5px;flex-wrap:wrap}
-.pal-c{width:22px;height:22px;border-radius:50%;border:0;background:var(--c);cursor:pointer;padding:0}
+.pal-c{width:34px;height:34px;border-radius:50%;border:0;background:var(--c);cursor:pointer;padding:0}
 .pal-c.on{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
 .tt.ed{cursor:text;border-radius:4px}
 .tt.ed:hover{background:var(--mark-s);box-shadow:0 0 0 2px var(--mark-s)}
@@ -428,7 +428,8 @@ input::placeholder,textarea::placeholder{color:#687e77;opacity:1}
 .chip.on{background:#1b514b;border-color:#1b514b;color:#fff}
 .chip:hover:not(.on){background:#eaf5ed}
 .cf-bar{gap:7px;margin-bottom:15px}
-.cdot{width:16px;height:16px}
+.cdot{width:19px;height:19px}
+.chip.cf .cdot-s,.cr .cdot-s{width:17px;height:17px;margin-right:7px}
 
 /* Calendar and planning */
 .yr{padding:12px 13px;background:#fffefa;box-shadow:0 3px 0 rgba(29,76,68,.04);margin-bottom:20px}
@@ -473,6 +474,22 @@ input::placeholder,textarea::placeholder{color:#687e77;opacity:1}
 .home-month .mcal{gap:5px;margin:3px 0 13px}
 .home-month .day{min-height:75px;padding:6px;border-radius:10px}
 .home-month .day.on{padding:5px}
+.planner-panel{margin-bottom:18px}
+.planner-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:15px;flex-wrap:wrap}
+.planner-toolbar h2{margin:0 0 3px}
+.planner-toolbar p{margin:0;color:var(--ink2);font-size:13.5px}
+.planner-switch{display:inline-flex;gap:3px;padding:4px;border:1px solid #bfd5c7;border-radius:12px;background:#edf5ee}
+.planner-switch button{border:0;border-radius:9px;background:transparent;color:var(--ink2);font:inherit;font-weight:800;font-size:14px;min-height:38px;padding:6px 18px;cursor:pointer}
+.planner-switch button.on{background:#1b514b;color:#fff;box-shadow:0 2px 6px rgba(25,72,61,.18)}
+.planner-switch button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.planner-month-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:3px 0 13px}
+.planner-month-head h3{font-size:19px;margin:0;letter-spacing:-.035em}
+.planner-month-head .row{gap:6px}
+.planner-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:15px;padding-top:13px}
+.planner-footer .small{color:var(--ink2)}
+.planner-panel .week{margin-top:12px}
+.planner-panel .week-panel{margin:0}
+.week-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:18px;margin:2px 0 12px}
 .home-month .day .dn{font-size:14px}
 .home-month .day .ev{font-size:10.5px}
 .home-month .day-detail{border-top:1px solid #d7e6d8;padding-top:8px}
@@ -540,6 +557,9 @@ dialog::backdrop{background:rgba(14,40,36,.62)}
   .paper{padding:18px}
   .home-month .day{min-height:49px;padding:4px 2px}
   .home-month .day.on{padding:3px 1px}
+  .planner-toolbar{align-items:flex-start}
+  .planner-switch{width:100%}
+  .planner-switch button{flex:1}
   .today-panel h2::before{height:20px}
 }
 @media(max-width:430px){
@@ -758,7 +778,7 @@ function catDot(x, k){
 const passCat = x => !ui.catFilter || (ui.catFilter === 'none' ? !x.cat || !catOf(x) : x.cat === ui.catFilter);
 function catFilterBar(){
   const chip = (id, label, color, hollow) => `<button class="chip cf ${ui.catFilter===id?'on':''}" aria-pressed="${ui.catFilter===id}" data-act="catFilter" data-c="${id??''}">${color||hollow?`<i class="cdot-s ${hollow?'none':''}" style="${color?`--c:${color}`:''}"></i>`:''}${label}</button>`;
-  return `<div class="chips cf-bar">${chip(null,'전체')}${S.cats.map(c => chip(c.id, esc(c.name), c.color)).join('')}${chip('none','없음',null,true)}</div>`;
+  return `<div class="chips cf-bar" role="group" aria-label="업무 카테고리로 보기">${chip(null,'전체')}${S.cats.map(c => chip(c.id, esc(c.name), c.color)).join('')}${chip('none','없음',null,true)}<button class="chip cf" data-act="catManage">＋ 카테고리 관리</button></div>`;
 }
 function catPopup(anchor){
   closeCatPop();
@@ -827,7 +847,7 @@ function evaluationChecks(f){
 }
 
 /* ===== 화면: 공통 ===== */
-let ui = {homeMonth:null, docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null};
+let ui = {homeMonth:null, calendarMode:S.settings.calendarMode==='week'?'week':'month', docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null};
 function renderNav(r){
   $('#nav').innerHTML = NAV.map(([k,l,sh,ic]) => `<a href="#${k}" class="${r===k?'on':''}" ${r===k?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg><span class="lf">${l}</span><span class="ls">${sh}</span></a>`).join('');
 }
@@ -890,10 +910,9 @@ function weekBoard(){
       <button class="ck sm ${e.done?'on':''}" data-act="${e.k==='task'?'taskToggle':'todoToggle'}" data-id="${e.x.id}" aria-pressed="${e.done}" aria-label="${esc(e.title)} 완료">${CHECK}</button>
       ${catDot(e.x, e.k)}<span class="tt ed ${e.k==='task'?'is-task':''}" data-k="${e.k}" data-id="${e.x.id}" data-act="inlineEdit" tabindex="0" title="눌러서 수정">${esc(e.title)}</span>
       <button class="icon-btn del" data-act="${e.k==='task'?'taskDel':'todoDel'}" data-id="${e.x.id}" aria-label="${esc(e.title)} 삭제" title="삭제">🗑️</button></div>`;
-  return `<section class="panel week-panel">
-    <h2><span>날짜별 할 일 <span class="small muted">${label} · ${days[0].getMonth()+1}/${days[0].getDate()} ~ ${days[6].getMonth()+1}/${days[6].getDate()}</span></span>
-      <span class="row"><button class="btn sm ghost" data-act="weekMove" data-n="-1" aria-label="지난주">‹</button>${off!==0?'<button class="btn sm ghost" data-act="weekMove" data-n="0">이번 주</button>':''}<button class="btn sm ghost" data-act="weekMove" data-n="1" aria-label="다음 주">›</button></span></h2>
-    ${catFilterBar()}
+  return `<div class="week-board">
+    <h3 class="week-title"><span>${label} <span class="small muted">${days[0].getMonth()+1}/${days[0].getDate()} ~ ${days[6].getMonth()+1}/${days[6].getDate()}</span></span>
+      <span class="row"><button class="btn sm ghost" data-act="weekMove" data-n="-1" aria-label="지난주">‹</button>${off!==0?'<button class="btn sm ghost" data-act="weekMove" data-n="0">이번 주</button>':''}<button class="btn sm ghost" data-act="weekMove" data-n="1" aria-label="다음 주">›</button></span></h3>
     <div class="week">${days.map(d => {
       const k = ymd(d), list = evs[k] || [], w = d.getDay();
       return `<div class="wd ${k===t?'today':''} ${w===0||w===6?'wkend':''} ${k<t?'past':''}">
@@ -903,7 +922,7 @@ function weekBoard(){
       </div>`;
     }).join('')}</div>
     <div class="legend"><span>색 점을 누르면 카테고리 변경 · ‘+ 할 일’에 적고 Enter → 그날에 추가 · 글자를 누르면 바로 수정</span></div>
-  </section>`;
+  </div>`;
 }
 function todoGroups(todos){
   const t = todayStr(), groups = new Map();
@@ -950,12 +969,28 @@ function monthCal(vm, showUndated = true, autoSelectToday = true){
   return `<div class="mcal">${cells}</div>${detail}
     ${showUndated && undated.length ? `<div class="sec-t">날짜 없는 ${vm}월 업무</div>${undated.map(x => taskRow(x)).join('')}` : ''}`;
 }
+function plannerPanel(vm, showUndated = true){
+  const cm = new Date().getMonth()+1, mode = ui.calendarMode;
+  const year = vm >= 3 ? schoolYear() : schoolYear()+1;
+  const prev = vm === 1 ? 12 : vm-1, next = vm === 12 ? 1 : vm+1;
+  return `<section class="panel planner-panel">
+    <div class="planner-toolbar"><div><h2>업무 일정</h2><p>색 태그로 업무를 나누고, 한 달 또는 한 주를 골라 보세요.</p></div>
+      <div class="planner-switch" role="group" aria-label="달력 보기 방식">
+        <button type="button" data-act="calendarMode" data-mode="month" class="${mode==='month'?'on':''}" aria-pressed="${mode==='month'}">한 달</button>
+        <button type="button" data-act="calendarMode" data-mode="week" class="${mode==='week'?'on':''}" aria-pressed="${mode==='week'}">한 주</button>
+      </div></div>
+    ${catFilterBar()}
+    ${mode==='week' ? weekBoard() : `<div class="planner-month-head"><h3>${year}년 ${vm}월</h3><div class="row">
+      <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${prev}" aria-label="이전 달">‹</button>
+      ${vm!==cm?`<button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${cm}">이번 달</button>`:''}
+      <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${next}" aria-label="다음 달">›</button>
+    </div></div>${monthCal(vm, showUndated, showUndated)}`}
+    <div class="planner-footer"><span class="small">색 점을 누르면 그 업무의 카테고리를 바꿀 수 있어요.</span><button class="btn sm ghost" type="button" data-act="catManage">카테고리 만들기·색 바꾸기</button></div>
+  </section>`;
+}
 function vHome(){
   const now = new Date(), cm = now.getMonth()+1, t = todayStr();
   const vm = ui.homeMonth || cm;
-  const prevMonth = vm === 1 ? 12 : vm - 1;
-  const nextMonth = vm === 12 ? 1 : vm + 1;
-  const viewYear = vm >= 3 ? schoolYear() : schoolYear() + 1;
   const evs = eventsMap();
   // 오늘과 놓친 일
   const todayList = evs[t] || [];
@@ -970,11 +1005,6 @@ function vHome(){
   const monthUndated = tasksOf(cm).filter(x => !x.due && passCat(x));
   const someday = S.todos.filter(x => !x.date && passCat(x) && (!x.done || (x.doneAt && dayDiff(x.doneAt) >= -1))).sort((a,b) => a.done - b.done);
   const todayLeft = todayList.filter(e => !e.done).length;
-  const weekBegin = weekStart(now), weekEnd = new Date(weekBegin);
-  weekEnd.setDate(weekEnd.getDate() + 6);
-  const weekLeft = Object.entries(evs).filter(([date]) => date >= ymd(weekBegin) && date <= ymd(weekEnd))
-    .reduce((count, [, items]) => count + items.filter(item => !item.done).length, 0);
-
   const ss = S.students;
   const noEvac = ss.filter(s => !(s.evacHelper||'').trim()).length;
   const noMeal = ss.filter(s => !(s.meal||'').trim()).length;
@@ -1005,7 +1035,7 @@ function vHome(){
   </section>` : ''}
   ${!canStore ? `<section class="note warn"><b>이 창에서는 기록이 저장되지 않아요.</b> 미리보기 창처럼 저장이 막힌 곳에서 열려 있어요. 지금 적은 내용은 창을 닫으면 사라지니, 파일을 크롬·엣지 같은 브라우저로 열거나 사이트 주소로 접속해서 써 주세요.</section>` : ''}
   ${needBackup ? `<section class="note warn"><b>백업한 지 오래됐어요.</b> 브라우저 기록을 지우면 학생 카드와 관찰 기록도 함께 지워져요. <a href="#set">설정에서 백업 파일 받기</a></section>` : ''}
-  <div class="grid home-top">
+  <div class="home-top">
     <section class="panel today-panel">
       <h2>오늘 <span class="small muted">${fmtMDw(t)}</span></h2>
       <form class="add-row today-add" data-form="dayTodo" data-date="${t}">
@@ -1017,21 +1047,9 @@ function vHome(){
         : `<div class="empty" style="margin-top:10px">${late.length ? '오늘로 정한 일은 아직 없어요.' : '오늘 할 일이 없어요. 위 입력칸에 새 할 일을 적어 보세요.'}</div>`}
       ${pastMonth ? `<div class="small muted" style="margin-top:10px">지난달까지 남은 업무 ${pastMonth}개 · <a href="#cal" data-act="goMonth" data-m="${cm}">업무 달력에서 확인</a></div>` : ''}
     </section>
-    <section class="panel home-month">
-      <h2><span>${viewYear}년 ${vm}월</span><span class="row">
-        <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${prevMonth}" aria-label="이전 달">‹</button>
-        ${vm !== cm ? `<button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${cm}">이번 달</button>` : ''}
-        <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${nextMonth}" aria-label="다음 달">›</button>
-      </span></h2>
-      ${monthCal(vm, false, false)}
-      <a class="more month-link" href="#cal" data-act="goMonth" data-m="${vm}">한 해 업무 달력 보기 →</a>
-    </section>
   </div>
-  <section class="panel week-summary">
-    <div><h2>이번 주 일정</h2><p>${weekLeft ? `남은 일 ${weekLeft}개` : '남은 일이 없어요'}</p></div>
-    <button class="btn ghost" type="button" data-act="toggleWeek" aria-expanded="${!!ui.weekOpen}">${ui.weekOpen ? '주간 일정 접기' : '주간 일정 펼치기'}</button>
-  </section>
-  ${ui.weekOpen ? weekBoard() : ''}
+  ${plannerPanel(vm, false)}
+  <div class="row" style="justify-content:flex-end;margin:-6px 0 15px"><a class="more month-link" href="#cal" data-act="goMonth" data-m="${vm}">한 해 업무 달력 보기 →</a></div>
   <section class="panel home-someday">
     <h2>날짜 없는 일 <a class="more" href="#cal" data-act="goMonth" data-m="${cm}">업무 달력</a></h2>
     ${monthUndated.length ? `<div class="tg">${cm}월 안에 할 업무<span>${monthUndated.length}</span></div>${monthUndated.map(x => taskRow(x)).join('')}` : ''}
@@ -1075,14 +1093,14 @@ function vCal(){
   S.todos.forEach(x => { if (x.date && !x.done && passCat(x) && dayDiff(x.date) <= 30 && dayDiff(x.date) >= 0) up.push({d:x.date, title:x.text, kind:'할 일', x}); });
   up.sort((a,b) => a.d.localeCompare(b.d));
   return `<header class="ph"><div><h1>업무 달력</h1>
-    <div class="sub">${schoolYear()}학년도 (3월 ~ 다음 해 2월). 달을 누르면 날짜별로 보여요.</div></div>
+    <div class="sub">${schoolYear()}학년도 (3월 ~ 다음 해 2월). 한 달과 한 주를 바꾸어 보세요.</div></div>
     <div class="acts"><button class="btn ghost" data-act="icsExport">폰 캘린더로 보내기</button><button class="btn" data-act="taskNew">업무 추가</button></div></header>
   ${yearStrip()}
+  ${plannerPanel(vm)}
   <div class="grid">
     <section class="panel">
-      <h2><span style="white-space:nowrap">${vm}월</span> ${vm!==cm?`<button class="btn sm ghost" data-act="pickMonth" data-m="${cm}">이번 달로</button>`:''}</h2>
-      ${monthCal(vm)}
-      ${overdue.length ? `<div class="sec-t" style="color:var(--red)">지난달까지 남은 업무</div>${overdue.slice(0,6).map(x => taskRow(x,{month:true})).join('')}<div class="row" style="margin-top:8px">${overdue.length>6?`<span class="small muted">외 ${overdue.length-6}개는 아래 한 해 목록에 있어요</span>`:''}<button class="btn sm ghost" data-act="pastDone">지난 업무 모두 완료로 표시</button></div>` : ''}
+      <h2>지난달까지 남은 업무</h2>
+      ${overdue.length ? `${overdue.slice(0,6).map(x => taskRow(x,{month:true})).join('')}<div class="row" style="margin-top:8px">${overdue.length>6?`<span class="small muted">외 ${overdue.length-6}개는 아래 한 해 목록에 있어요</span>`:''}<button class="btn sm ghost" data-act="pastDone">지난 업무 모두 완료로 표시</button></div>` : '<div class="empty">지난달까지 남은 업무가 없어요.</div>'}
     </section>
     <section class="panel">
       <h2>다가오는 일 <span class="small muted">30일 안</span></h2>
@@ -1407,13 +1425,13 @@ function vSet(){
         <div class="row"><button class="btn" data-act="export">백업 파일 받기</button><button class="btn ghost" data-act="import">백업 파일 불러오기</button></div>
         <div class="hint">마지막 백업: ${S.lastExport ? fmtMD(S.lastExport) : '아직 없음'} · 저장된 양 약 ${size}KB</div>
       </section>
-      <section class="panel"><h2>업무 카테고리</h2>
+      <section class="panel" id="catSettings"><h2>업무 카테고리</h2>
         <p class="small" style="margin-top:0">할 일과 업무를 색으로 나눠요. 이름은 고쳐 쓰고, 색은 동그라미를 눌러 고르세요.</p>
         ${S.cats.map(c => `<div class="cat-row">
           <input class="cat-name" data-cat-name="${c.id}" value="${esc(c.name)}" aria-label="카테고리 이름">
           <div class="pal">${PALETTE.map(col => `<button class="pal-c ${c.color===col?'on':''}" style="--c:${col}" data-act="catColor" data-c="${c.id}" data-col="${col}" aria-label="색 ${col}" aria-pressed="${c.color===col}"></button>`).join('')}</div>
           <button class="icon-btn del" data-act="catDel" data-c="${c.id}" aria-label="${esc(c.name)} 카테고리 삭제" title="삭제">🗑️</button></div>`).join('')}
-        <button class="btn sm ghost" style="margin-top:8px" data-act="catAdd">카테고리 추가</button>
+        <div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="catAdd">카테고리 추가</button><button class="btn sm ghost" data-act="goCal">업무 달력으로</button></div>
       </section>
       <section class="panel"><h2>정리</h2>
         <div class="row">
@@ -1526,15 +1544,27 @@ document.addEventListener('click', async e => {
     case 'welcomeOk': S.welcomed = true; save(); render(); break;
     case 'demoAdd': demoAdd(); break;
     case 'demoDel': if (await ask('예시 학생과 그 기록을 지울까요?', '지우기')) demoDel(); break;
-    case 'goMonth': e.preventDefault(); ui.homeMonth = +b.dataset.m; go('cal'); break;
+    case 'goMonth': e.preventDefault(); ui.homeMonth = +b.dataset.m; ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); go('cal'); break;
     case 'taskToggle': { const l = doneList(); const i = l.indexOf(id); if (i >= 0) l.splice(i,1); else l.push(id); save(); render(); break; }
     case 'pastDone': { const idx = ORDER.indexOf(new Date().getMonth()+1); const l = doneList();
       if (await ask('지난달까지의 업무를 모두 완료로 표시할까요? 이 학년도 중간부터 쓰기 시작했다면 정리에 편해요.', '완료로 표시', false)) { S.tasks.forEach(t => { if (ORDER.indexOf(t.m) < idx && !l.includes(t.id)) l.push(t.id); }); save(); render(); } break; }
     case 'icsExport': exportIcs(); break;
     case 'todoToday': { const x = S.todos.find(y => y.id === id); if (x){ x.date = todayStr(); save(); toast('오늘로 옮겼어요'); render(); } break; }
-    case 'pickMonth': ui.homeMonth = +b.dataset.m; ui.homeDay = null; render(); break;
-    case 'toggleWeek': ui.weekOpen = !ui.weekOpen; render(); break;
-    case 'weekMove': ui.weekOff = +b.dataset.n === 0 ? 0 : (ui.weekOff||0) + +b.dataset.n; render(); break;
+    case 'pickMonth': ui.homeMonth = +b.dataset.m; ui.homeDay = null; ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); render(); break;
+    case 'calendarMode': {
+      const mode = b.dataset.mode === 'week' ? 'week' : 'month';
+      if (mode === 'week' && ui.calendarMode !== 'week') {
+        const now = new Date(), vm = ui.homeMonth || now.getMonth()+1;
+        const anchor = ui.homeDay ? parseYmd(ui.homeDay) : vm === now.getMonth()+1 ? now : new Date(vm >= 3 ? schoolYear() : schoolYear()+1, vm-1, 1);
+        ui.weekOff = Math.round((weekStart(anchor).getTime()-weekStart(now).getTime()) / (7*86400000));
+      }
+      ui.calendarMode = mode; S.settings.calendarMode = mode; save(); render(); break;
+    }
+    case 'weekMove': { ui.weekOff = +b.dataset.n === 0 ? 0 : (ui.weekOff||0) + +b.dataset.n;
+      const start = weekStart(new Date()); start.setDate(start.getDate() + ui.weekOff*7);
+      ui.homeMonth = start.getMonth()+1; render(); break; }
+    case 'catManage': go('set'); requestAnimationFrame(() => document.getElementById('catSettings')?.scrollIntoView({block:'start'})); break;
+    case 'goCal': go('cal'); break;
     case 'inlineEdit': startInline(b); break;
 
     case 'catPick': e.stopPropagation(); if (document.getElementById('catPop') && ui._popFor === b.dataset.id) { closeCatPop(); ui._popFor = null; } else { catPopup(b); ui._popFor = b.dataset.id; } break;
@@ -1601,7 +1631,7 @@ document.addEventListener('click', async e => {
     case 'import': $('#importFile').click(); break;
     case 'wipe': if (await ask('이 기기에 저장된 학생 카드, 관찰 기록, 할 일, 업무 달력을 모두 지울까요? 되돌릴 수 없어요.', '모두 지우기')) {
         try { localStorage.removeItem(KEY); } catch(_){}
-        S = fresh(); ui = {docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null}; save(); toast('모두 지웠어요'); go('home'); } break;
+        S = fresh(); ui = {homeMonth:null, calendarMode:'month', docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null}; save(); toast('모두 지웠어요'); go('home'); } break;
   }
 });
 
