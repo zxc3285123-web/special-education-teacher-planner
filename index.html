@@ -87,8 +87,12 @@ main{padding:28px 32px 64px;max-width:1200px;width:100%}
 .acts-i{display:flex;gap:2px;flex:none;align-items:center}
 .icon-btn.del{font-size:15px;line-height:1;padding:4px 6px}
 .icon-btn.del:hover{background:var(--red-s)}
-.mcal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-bottom:6px}
+.mcal{display:grid;grid-template-columns:46px repeat(7,minmax(0,1fr));gap:3px;margin-bottom:6px}
 .mcal .dw{font-size:12px;font-weight:700;color:var(--ink3);text-align:center;padding:2px 0}
+.mcal .month-week-pick{border:1px solid #a6c7b4;background:#e4f1e8;color:#174f44;border-radius:8px;min-height:66px;padding:3px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.mcal .month-week-pick:hover,.mcal .month-week-pick:focus-visible{background:#c9e4d3;outline:2px solid #1b514b;outline-offset:1px}
+.mcal .month-week-pick.active{background:#1b514b;color:#fff}
+.mcal .day-outside{min-height:66px;border-radius:8px;background:#f6f8f5}
 .mcal .sun .dn,.mcal .dw.sun{color:var(--red)}
 .mcal .sat .dn,.mcal .dw.sat{color:var(--blue)}
 .day{border:1px solid var(--line);background:#fff;border-radius:8px;min-height:66px;padding:4px 5px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden}
@@ -317,6 +321,9 @@ dialog.ask{width:min(400px,92vw)}
   .wd{min-height:0}
   .wd .wempty{display:none}
   .day{min-height:46px;padding:3px 2px;align-items:center}
+  .mcal{grid-template-columns:38px repeat(7,minmax(0,1fr))}
+  .mcal .month-week-pick,.mcal .day-outside{min-height:46px}
+  .mcal .month-week-pick{font-size:11px}
   .day.on{padding:2px 1px}
   .day .dn{align-self:center}
   .day .ev,.day .evm{display:none}
@@ -478,10 +485,6 @@ input::placeholder,textarea::placeholder{color:#687e77;opacity:1}
 .planner-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:15px;flex-wrap:wrap}
 .planner-toolbar h2{margin:0 0 3px}
 .planner-toolbar p{margin:0;color:var(--ink2);font-size:13.5px}
-.planner-switch{display:inline-flex;gap:3px;padding:4px;border:1px solid #bfd5c7;border-radius:12px;background:#edf5ee}
-.planner-switch button{border:0;border-radius:9px;background:transparent;color:var(--ink2);font:inherit;font-weight:800;font-size:14px;min-height:38px;padding:6px 18px;cursor:pointer}
-.planner-switch button.on{background:#1b514b;color:#fff;box-shadow:0 2px 6px rgba(25,72,61,.18)}
-.planner-switch button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .planner-month-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:3px 0 13px}
 .planner-month-head h3{font-size:19px;margin:0;letter-spacing:-.035em}
 .planner-month-head .row{gap:6px}
@@ -580,8 +583,6 @@ dialog::backdrop{background:rgba(14,40,36,.62)}
   .home-month .day{min-height:49px;padding:4px 2px}
   .home-month .day.on{padding:3px 1px}
   .planner-toolbar{align-items:flex-start}
-  .planner-switch{width:100%}
-  .planner-switch button{flex:1}
   .planner-week-layout .week{grid-template-columns:minmax(0,1fr)}
   .mini-month{max-width:390px;width:100%;margin:0 auto}
   .today-panel h2::before{height:20px}
@@ -970,7 +971,7 @@ function weekBoard(){
       <button class="icon-btn del" data-act="${e.k==='task'?'taskDel':'todoDel'}" data-id="${e.x.id}" aria-label="${esc(e.title)} 삭제" title="삭제">🗑️</button></div>`;
   return `<div class="planner-week-layout">${miniMonthNav(start)}<div class="week-board">
     <h3 class="week-title"><span>${label} <span class="small muted">${days[0].getMonth()+1}/${days[0].getDate()} ~ ${days[6].getMonth()+1}/${days[6].getDate()}</span></span>
-      <span class="row"><button class="btn sm ghost" data-act="weekMove" data-n="-1" aria-label="지난주">‹</button>${off!==0?'<button class="btn sm ghost" data-act="weekMove" data-n="0">이번 주</button>':''}<button class="btn sm ghost" data-act="weekMove" data-n="1" aria-label="다음 주">›</button></span></h3>
+      <span class="row"><button class="btn sm ghost" data-act="showMonth">한 달 달력</button><button class="btn sm ghost" data-act="weekMove" data-n="-1" aria-label="지난주">‹</button>${off!==0?'<button class="btn sm ghost" data-act="weekMove" data-n="0">이번 주</button>':''}<button class="btn sm ghost" data-act="weekMove" data-n="1" aria-label="다음 주">›</button></span></h3>
     <div class="week">${days.map(d => {
       const k = ymd(d), list = evs[k] || [], w = d.getDay();
       return `<div class="wd ${k===t?'today':''} ${w===0||w===6?'wkend':''} ${k<t?'past':''}">
@@ -996,19 +997,26 @@ function todoGroups(todos){
 }
 function monthCal(vm, showUndated = true, autoSelectToday = true){
   const y = vm >= 3 ? schoolYear() : schoolYear()+1;
-  const first = new Date(y, vm-1, 1), days = new Date(y, vm, 0).getDate(), t = todayStr();
+  const first = new Date(y, vm-1, 1), last = new Date(y, vm, 0), t = todayStr();
   const key = d => `${y}-${pad(vm)}-${pad(d)}`;
   if (ui.homeDay == null || (ui.homeDay && !ui.homeDay.startsWith(`${y}-${pad(vm)}-`))) ui.homeDay = autoSelectToday && t.startsWith(`${y}-${pad(vm)}-`) ? t : '';
   const evs = eventsMap();
-  let cells = DOW.map((w,i) => `<div class="dw ${i===0?'sun':i===6?'sat':''}">${w}</div>`).join('');
-  for (let i = 0; i < first.getDay(); i++) cells += '<div></div>';
-  for (let d = 1; d <= days; d++){
-    const k = key(d), list = evs[k] || [], wd = (first.getDay() + d - 1) % 7;
-    cells += `<button class="day ${k===t?'today':''} ${k===ui.homeDay?'on':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="pickDay" data-d="${k}" aria-label="${vm}월 ${d}일${list.length?`, 일정 ${list.length}개`:''}">
-      <span class="dn">${d}</span>
-      ${list.slice(0,2).map(e => { const c = catOf(e.x); return `<span class="ev ${e.done?'dd':''}" style="--c:${c?c.color:'#B8C2CC'}">${esc(e.title)}</span>`; }).join('')}
-      ${list.length>2 ? `<span class="evm">+${list.length-2}</span>` : ''}
-      ${list.length ? `<span class="pips">${list.slice(0,3).map(e => { const c = catOf(e.x); return `<i style="background:${c?c.color:'#B8C2CC'}"></i>`; }).join('')}</span>` : ''}</button>`;
+  let cells = '<div class="dw">주</div>' + ['월','화','수','목','금','토','일'].map((w,i) => `<div class="dw ${i===5?'sat':i===6?'sun':''}">${w}</div>`).join('');
+  const selectedWeek = weekStart(new Date()); selectedWeek.setDate(selectedWeek.getDate()+(ui.weekOff||0)*7);
+  for (let start = weekStart(first), n = 1; start <= last; start.setDate(start.getDate()+7), n++){
+    const weekKey = ymd(start), active = weekKey === ymd(selectedWeek);
+    const end = new Date(start); end.setDate(end.getDate()+6);
+    cells += `<button class="month-week-pick ${active?'active':''}" data-act="weekJump" data-d="${weekKey}" data-ym="${y}-${pad(vm)}" aria-label="${vm}월 ${n}주 (${start.getMonth()+1}월 ${start.getDate()}일부터 ${end.getMonth()+1}월 ${end.getDate()}일까지) 보기" aria-pressed="${active}">${n}주</button>`;
+    for (let i = 0; i < 7; i++){
+      const date = new Date(start); date.setDate(date.getDate()+i);
+      if (date.getMonth()+1 !== vm){ cells += '<div class="day-outside" aria-hidden="true"></div>'; continue; }
+      const d = date.getDate(), k = key(d), list = evs[k] || [], wd = date.getDay();
+      cells += `<button class="day ${k===t?'today':''} ${k===ui.homeDay?'on':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="pickDay" data-d="${k}" aria-label="${vm}월 ${d}일${list.length?`, 일정 ${list.length}개`:''}">
+        <span class="dn">${d}</span>
+        ${list.slice(0,2).map(e => { const c = catOf(e.x); return `<span class="ev ${e.done?'dd':''}" style="--c:${c?c.color:'#B8C2CC'}">${esc(e.title)}</span>`; }).join('')}
+        ${list.length>2 ? `<span class="evm">+${list.length-2}</span>` : ''}
+        ${list.length ? `<span class="pips">${list.slice(0,3).map(e => { const c = catOf(e.x); return `<i style="background:${c?c.color:'#B8C2CC'}"></i>`; }).join('')}</span>` : ''}</button>`;
+    }
   }
   let detail = '';
   if (ui.homeDay){
@@ -1032,11 +1040,7 @@ function plannerPanel(vm, showUndated = true){
   const year = vm >= 3 ? schoolYear() : schoolYear()+1;
   const prev = vm === 1 ? 12 : vm-1, next = vm === 12 ? 1 : vm+1;
   return `<section class="panel planner-panel">
-    <div class="planner-toolbar"><div><h2>업무 일정</h2><p>색 태그로 업무를 나누고, 한 달 또는 한 주를 골라 보세요.</p></div>
-      <div class="planner-switch" role="group" aria-label="달력 보기 방식">
-        <button type="button" data-act="calendarMode" data-mode="month" class="${mode==='month'?'on':''}" aria-pressed="${mode==='month'}">한 달</button>
-        <button type="button" data-act="calendarMode" data-mode="week" class="${mode==='week'?'on':''}" aria-pressed="${mode==='week'}">한 주</button>
-      </div></div>
+    <div class="planner-toolbar"><div><h2>업무 일정</h2><p>월 달력 맨 왼쪽의 ‘1주’처럼 주를 누르면 해당 주 일정이 열려요.</p></div></div>
     ${catFilterBar()}
     ${mode==='week' ? weekBoard() : `<div class="planner-month-head"><h3>${year}년 ${vm}월</h3><div class="row">
       <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${prev}" aria-label="이전 달">‹</button>
@@ -1609,23 +1613,15 @@ document.addEventListener('click', async e => {
     case 'icsExport': exportIcs(); break;
     case 'todoToday': { const x = S.todos.find(y => y.id === id); if (x){ x.date = todayStr(); save(); toast('오늘로 옮겼어요'); render(); } break; }
     case 'pickMonth': ui.homeMonth = +b.dataset.m; ui.homeDay = null; ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); render(); break;
-    case 'calendarMode': {
-      const mode = b.dataset.mode === 'week' ? 'week' : 'month';
-      if (mode === 'week' && ui.calendarMode !== 'week') {
-        const now = new Date(), vm = ui.homeMonth || now.getMonth()+1;
-        const anchor = ui.homeDay ? parseYmd(ui.homeDay) : vm === now.getMonth()+1 ? now : new Date(vm >= 3 ? schoolYear() : schoolYear()+1, vm-1, 1);
-        ui.weekOff = Math.round((weekStart(anchor).getTime()-weekStart(now).getTime()) / (7*86400000));
-        ui.miniMonth = weekFocusMonth(weekStart(anchor));
-      }
-      ui.calendarMode = mode; S.settings.calendarMode = mode; save(); render(); break;
-    }
+    case 'showMonth': ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); render(); break;
     case 'weekMove': { ui.weekOff = +b.dataset.n === 0 ? 0 : (ui.weekOff||0) + +b.dataset.n;
       const start = weekStart(new Date()); start.setDate(start.getDate() + ui.weekOff*7);
       ui.miniMonth = weekFocusMonth(start); ui.homeMonth = +ui.miniMonth.slice(5); render(); break; }
     case 'miniMonthMove': ui.miniMonth = b.dataset.ym; render(); break;
     case 'weekJump': { const start = weekStart(parseYmd(b.dataset.d));
       ui.weekOff = Math.round((start.getTime()-weekStart(new Date()).getTime()) / (7*86400000));
-      ui.miniMonth = b.dataset.ym; ui.homeMonth = +weekFocusMonth(start).slice(5); render(); break; }
+      ui.miniMonth = b.dataset.ym; ui.homeMonth = +b.dataset.ym.slice(5);
+      ui.calendarMode = 'week'; S.settings.calendarMode = 'week'; save(); render(); break; }
     case 'catManage': go('set'); requestAnimationFrame(() => document.getElementById('catSettings')?.scrollIntoView({block:'start'})); break;
     case 'goCal': go('cal'); break;
     case 'inlineEdit': startInline(b); break;
