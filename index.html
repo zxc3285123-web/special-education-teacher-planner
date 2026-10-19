@@ -762,7 +762,7 @@ async function copyText(text){
   catch(e){
     const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
     document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); toast('복사했어요'); } catch(_) { toast('복사가 안 돼요. 글을 직접 선택해 주세요'); }
+    try { toast(document.execCommand('copy') ? '복사했어요' : '복사가 안 돼요. 글을 직접 선택해 주세요'); } catch(_) { toast('복사가 안 돼요. 글을 직접 선택해 주세요'); }
     ta.remove();
   }
 }
@@ -893,7 +893,7 @@ function evaluationChecks(f){
 }
 
 /* ===== 화면: 공통 ===== */
-let ui = {homeMonth:null, calendarMode:S.settings.calendarMode==='week'?'week':'month', docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null};
+let ui = {homeMonth:null, catFilter:null, calendarMode:S.settings.calendarMode==='week'?'week':'month', docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null};
 function renderNav(r){
   $('#nav').innerHTML = NAV.map(([k,l,sh,ic]) => `<a href="#${k}" class="${r===k?'on':''}" ${r===k?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg><span class="lf">${l}</span><span class="ls">${sh}</span></a>`).join('');
 }
@@ -1740,7 +1740,7 @@ document.addEventListener('click', async e => {
     case 'import': $('#importFile').click(); break;
     case 'wipe': if (await ask('이 기기에 저장된 학생 카드, 관찰 기록, 할 일, 업무 달력을 모두 지울까요? 되돌릴 수 없어요.', '모두 지우기')) {
         try { localStorage.removeItem(KEY); } catch(_){}
-        S = fresh(); ui = {homeMonth:null, calendarMode:'month', docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null}; save(); toast('모두 지웠어요'); go('home'); } break;
+        S = fresh(); ui = {homeMonth:null, catFilter:null, calendarMode:'month', docType:'beh', docSel:null, iepSid:null, iepGid:'new', form:null, obsSid:null, focusMonth:null}; save(); toast('모두 지웠어요'); go('home'); } break;
   }
 });
 
