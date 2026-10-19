@@ -477,6 +477,16 @@ input::placeholder,textarea::placeholder{color:#687e77;opacity:1}
 .quick-actions button:hover,.quick-actions a:hover{background:#e9f6eb;border-color:#83b6a0;color:#174d43}
 .quick-icon{flex:none;width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:#e0f1e6;color:#146d5b;font-size:20px;line-height:1}
 .quick-actions a:nth-child(3) .quick-icon{font-size:16px}
+.work-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 18px}
+.work-overview button{min-height:78px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:1px;border:1px solid #c9ddd0;border-radius:14px;background:#fffefa;padding:12px 16px;text-align:left;cursor:pointer;box-shadow:0 2px 0 rgba(29,76,68,.04)}
+.work-overview button:hover,.work-overview button:focus-visible{border-color:#27806d;background:#f0f8f1}
+.work-overview .overview-label{font-size:13px;color:var(--ink2);font-weight:700}
+.work-overview .overview-count{font-size:22px;line-height:1.2;font-weight:850;color:#1b514b}
+.work-overview .urgent .overview-count{color:#af443b}
+.home-someday{border-color:#bdd5c6;background:#fffefa}
+.home-someday .someday-help{color:var(--ink2);font-size:13px;margin:-2px 0 11px}
+.schedule-link{border:1px solid #b7d3c1;background:#eff8f0;color:#176452;border-radius:8px;padding:4px 9px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.schedule-link:hover{background:#dcefe2}
 .week-summary{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:16px;padding-top:16px;padding-bottom:16px}
 .week-summary h2{margin:0 0 2px}
 .week-summary p{margin:0;color:var(--ink2);font-size:14px}
@@ -577,6 +587,10 @@ dialog::backdrop{background:rgba(14,40,36,.62)}
   .panel{padding:19px 18px}
   .quick-actions{gap:7px;margin-bottom:14px}
   .quick-actions button,.quick-actions a{min-height:55px;padding:8px;font-size:13px;gap:7px}
+  .work-overview{gap:6px}
+  .work-overview button{padding:10px;min-height:65px}
+  .work-overview .overview-label{font-size:11.5px}
+  .work-overview .overview-count{font-size:18px}
   .quick-icon{width:27px;height:27px;font-size:18px}
   .week-summary{padding:15px 17px}
   .panel h2{font-size:18px}
@@ -835,6 +849,7 @@ function taskRow(t, opt = {}){
     ${catDot(t,'task')}<div class="tx"><span class="tt ed" data-k="task" data-id="${t.id}" data-act="inlineEdit" tabindex="0" title="눌러서 수정">${esc(t.title)}</span> ${d ? (done ? `<span class="tag gr">${fmtMD(d)}</span>` : ddayTag(d)) : ''}
       ${opt.month ? `<span class="tag gr">${t.m}월</span>` : ''}
       ${t.note ? `<span class="nt">${esc(t.note)}</span>` : ''}</div>
+    ${!d&&!done?`<button class="schedule-link" type="button" data-act="taskEdit" data-id="${t.id}" aria-label="${esc(t.title)} 날짜 정하기">날짜 정하기</button>`:''}
     <span class="acts-i"><button class="icon-btn" data-act="taskEdit" data-id="${t.id}" aria-label="${esc(t.title)} 수정">수정</button><button class="icon-btn del" data-act="taskDel" data-id="${t.id}" aria-label="${esc(t.title)} 삭제" title="삭제">🗑️</button></span>
   </div>`;
 }
@@ -923,6 +938,7 @@ function todoRow(x){
   return `<div class="item ${x.done?'done':''}">
     <button class="ck ${x.done?'on':''}" data-act="todoToggle" data-id="${x.id}" aria-pressed="${x.done}" aria-label="${esc(x.text)} 완료">${CHECK}</button>
     ${catDot(x,'todo')}<div class="tx"><span class="tt ed" data-k="todo" data-id="${x.id}" data-act="inlineEdit" tabindex="0" title="눌러서 수정">${esc(x.text)}</span> ${x.date ? (x.done ? `<span class="tag gr">${fmtMD(x.date)}</span>` : ddayTag(x.date)) : ''}</div>
+    ${!x.date&&!x.done?`<button class="schedule-link" type="button" data-act="todoSchedule" data-id="${x.id}" aria-label="${esc(x.text)} 날짜 정하기">날짜 정하기</button>`:''}
     <button class="icon-btn del" data-act="todoDel" data-id="${x.id}" aria-label="${esc(x.text)} 삭제" title="삭제">🗑️</button></div>`;
 }
 function eventsMap(){
@@ -1039,7 +1055,7 @@ function monthCal(vm, showUndated = true, autoSelectToday = true){
   }
   const undated = tasksOf(vm).filter(x => !x.due && passCat(x));
   return `<div class="mcal">${cells}</div>${detail}
-    ${showUndated && undated.length ? `<div class="sec-t">날짜 없는 ${vm}월 업무</div>${undated.map(x => taskRow(x)).join('')}` : ''}`;
+    ${showUndated && undated.length ? `<div class="sec-t">${vm}월 중 처리할 업무</div>${undated.map(x => taskRow(x)).join('')}` : ''}`;
 }
 function plannerPanel(vm, showUndated = true){
   const cm = new Date().getMonth()+1, mode = ui.calendarMode;
@@ -1069,10 +1085,12 @@ function vHome(){
   late.sort((a,b) => a.d.localeCompare(b.d));
   const idx = ORDER.indexOf(cm);
   const pastMonth = oldCount + S.tasks.filter(x => !x.due && ORDER.indexOf(x.m) < idx && !isDone(x.id) && passCat(x)).length;
-  // 날짜 없는 일
+  // 날짜를 정하지 않은 업무와 할 일
   const monthUndated = tasksOf(cm).filter(x => !x.due && passCat(x));
   const someday = S.todos.filter(x => !x.date && passCat(x) && (!x.done || (x.doneAt && dayDiff(x.doneAt) >= -1))).sort((a,b) => a.done - b.done);
   const todayLeft = todayList.filter(e => !e.done).length;
+  const upcoming7 = Object.entries(evs).filter(([d]) => dayDiff(d) >= 1 && dayDiff(d) <= 7).reduce((n,[,items]) => n + items.filter(e => !e.done).length, 0);
+  const laterLeft = monthUndated.filter(x => !isDone(x.id)).length + someday.filter(x => !x.done).length;
   const ss = S.students;
   const noEvac = ss.filter(s => !(s.evacHelper||'').trim()).length;
   const noMeal = ss.filter(s => !(s.meal||'').trim()).length;
@@ -1103,6 +1121,11 @@ function vHome(){
   </section>` : ''}
   ${!canStore ? `<section class="note warn"><b>이 창에서는 기록이 저장되지 않아요.</b> 미리보기 창처럼 저장이 막힌 곳에서 열려 있어요. 지금 적은 내용은 창을 닫으면 사라지니, 파일을 크롬·엣지 같은 브라우저로 열거나 사이트 주소로 접속해서 써 주세요.</section>` : ''}
   ${needBackup ? `<section class="note warn"><b>백업한 지 오래됐어요.</b> 브라우저 기록을 지우면 학생 카드와 관찰 기록도 함께 지워져요. <a href="#set">설정에서 백업 파일 받기</a></section>` : ''}
+  <div class="work-overview" aria-label="업무 한눈에 보기">
+    <button type="button" data-act="focusToday"><span class="overview-label">오늘 남은 일</span><span class="overview-count">${todayLeft}개</span></button>
+    <button type="button" data-act="goCal"><span class="overview-label">앞으로 7일</span><span class="overview-count">${upcoming7}개</span></button>
+    <button type="button" data-act="focusLater"><span class="overview-label">나중에 할 일</span><span class="overview-count">${laterLeft}개</span></button>
+  </div>
   <div class="home-top">
     <section class="panel today-panel">
       <h2>오늘 <span class="small muted">${fmtMDw(t)}</span></h2>
@@ -1119,12 +1142,13 @@ function vHome(){
   ${plannerPanel(vm, false)}
   <div class="row" style="justify-content:flex-end;margin:-6px 0 15px"><a class="more month-link" href="#cal" data-act="goMonth" data-m="${vm}">한 해 업무 달력 보기 →</a></div>
   <section class="panel home-someday">
-    <h2>날짜 없는 일 <a class="more" href="#cal" data-act="goMonth" data-m="${cm}">업무 달력</a></h2>
-    ${monthUndated.length ? `<div class="tg">${cm}월 안에 할 업무<span>${monthUndated.length}</span></div>${monthUndated.map(x => taskRow(x)).join('')}` : ''}
-    <div class="tg">언젠가 할 일<span>${someday.filter(x=>!x.done).length}</span></div>
-    ${someday.length ? someday.map(todoRow).join('') : '<div class="small muted" style="padding:6px 0">날짜를 정하지 않은 일을 적어 두는 곳이에요.</div>'}
+    <h2>나중에 할 일 <a class="more" href="#cal" data-act="goMonth" data-m="${cm}">업무 달력</a></h2>
+    <p class="someday-help">날짜가 정해지면 ‘날짜 정하기’를 눌러 달력에 옮길 수 있어요.</p>
+    ${monthUndated.length ? `<div class="tg">${cm}월 중 처리할 업무<span>${monthUndated.length}</span></div>${monthUndated.map(x => taskRow(x)).join('')}` : ''}
+    <div class="tg">날짜를 정하지 않은 할 일<span>${someday.filter(x=>!x.done).length}</span></div>
+    ${someday.length ? someday.map(todoRow).join('') : '<div class="small muted" style="padding:6px 0">날짜를 아직 정하지 않은 할 일을 적어 두세요.</div>'}
     <form class="add-row someday-add" data-form="todo">
-      <input type="text" name="text" placeholder="날짜 없이 적어 두기" aria-label="언젠가 할 일 추가" required>
+      <input type="text" name="text" placeholder="나중에 할 일 적기" aria-label="나중에 할 일 추가" required>
       <input type="hidden" name="date" value="">
       <button class="btn ghost" type="submit">추가</button>
     </form>
@@ -1161,7 +1185,7 @@ function vCal(){
   S.todos.forEach(x => { if (x.date && !x.done && passCat(x) && dayDiff(x.date) <= 30 && dayDiff(x.date) >= 0) up.push({d:x.date, title:x.text, kind:'할 일', x}); });
   up.sort((a,b) => a.d.localeCompare(b.d));
   return `<header class="ph"><div><h1>업무 달력</h1>
-    <div class="sub">${schoolYear()}학년도 (3월 ~ 다음 해 2월). 한 달과 한 주를 바꾸어 보세요.</div></div>
+    <div class="sub">${schoolYear()}학년도 (3월 ~ 다음 해 2월) · 월 달력 왼쪽에서 주를 누르면 주간 일정을 볼 수 있어요.</div></div>
     <div class="acts"><button class="btn ghost" data-act="icsExport">폰 캘린더로 보내기</button><button class="btn" data-act="taskNew">업무 추가</button></div></header>
   ${yearStrip()}
   ${plannerPanel(vm)}
@@ -1221,6 +1245,14 @@ function taskDialog(t, m, preset){
     </div>
     <div class="dlg-f">${isNew?'':`<button type="button" class="btn ghost left" data-act="taskDel" data-id="${t.id}">🗑️ 삭제</button>`}
       <button type="button" class="btn ghost" data-act="dlgClose">취소</button><button class="btn" type="submit">저장</button></div>
+  </form>`);
+}
+function todoScheduleDialog(todo){
+  if (!todo) return;
+  openDlg(`<form method="dialog" data-form="todoSchedule" data-id="${todo.id}">
+    <div class="dlg-h">할 일 날짜 정하기<button type="button" class="icon-btn" data-act="dlgClose" aria-label="닫기">닫기</button></div>
+    <div class="dlg-b"><p>${esc(todo.text)}</p><label class="f"><span>처리할 날짜</span><input type="date" name="date" value="${todayStr()}" required></label></div>
+    <div class="dlg-f"><button type="button" class="btn ghost" data-act="dlgClose">취소</button><button class="btn" type="submit">달력에 넣기</button></div>
   </form>`);
 }
 
@@ -1612,12 +1644,15 @@ document.addEventListener('click', async e => {
     case 'welcomeOk': S.welcomed = true; save(); render(); break;
     case 'demoAdd': demoAdd(); break;
     case 'demoDel': if (await ask('예시 학생과 그 기록을 지울까요?', '지우기')) demoDel(); break;
+    case 'focusToday': document.querySelector('.today-add input[name="text"]')?.focus(); break;
+    case 'focusLater': document.querySelector('.home-someday')?.scrollIntoView({block:'start',behavior:'smooth'}); break;
     case 'goMonth': e.preventDefault(); ui.homeMonth = +b.dataset.m; ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); go('cal'); break;
     case 'taskToggle': { const l = doneList(); const i = l.indexOf(id); if (i >= 0) l.splice(i,1); else l.push(id); save(); render(); break; }
     case 'pastDone': { const idx = ORDER.indexOf(new Date().getMonth()+1); const l = doneList();
       if (await ask('지난달까지의 업무를 모두 완료로 표시할까요? 이 학년도 중간부터 쓰기 시작했다면 정리에 편해요.', '완료로 표시', false)) { S.tasks.forEach(t => { if (ORDER.indexOf(t.m) < idx && !l.includes(t.id)) l.push(t.id); }); save(); render(); } break; }
     case 'icsExport': exportIcs(); break;
     case 'todoToday': { const x = S.todos.find(y => y.id === id); if (x){ x.date = todayStr(); save(); toast('오늘로 옮겼어요'); render(); } break; }
+    case 'todoSchedule': todoScheduleDialog(S.todos.find(x => x.id === id)); break;
     case 'pickMonth': ui.homeMonth = +b.dataset.m; ui.homeDay = null; ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); render(); break;
     case 'showMonth': ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); render(); break;
     case 'weekMove': { ui.weekOff = +b.dataset.n === 0 ? 0 : (ui.weekOff||0) + +b.dataset.n;
@@ -1763,6 +1798,10 @@ function handleForm(f){
     const text = (fd.get('text')||'').trim(); if (!text){ toast('할 일을 적어 주세요'); return; }
     S.todos.push({id:uid(), text, date:fd.get('date')||'', done:false, cat:ui.catFilter && ui.catFilter!=='none' ? ui.catFilter : ''}); save(); render();
     const inp = document.querySelector('form[data-form="todo"] input[name="text"]'); if (inp) inp.focus();
+  } else if (kind === 'todoSchedule'){
+    const todo = S.todos.find(x => x.id === f.dataset.id), date = String(fd.get('date')||'');
+    if (!todo || !/^\d{4}-\d{2}-\d{2}$/.test(date)){ toast('날짜를 골라 주세요'); return; }
+    todo.date = date; save(); closeDlg(); toast('달력에 넣었어요'); render();
   } else if (kind === 'dayTodo'){
     const text = (fd.get('text')||'').trim(); if (!text){ toast('할 일을 적어 주세요'); return; }
     const date = f.dataset.date, wadd = f.classList.contains('wadd');
