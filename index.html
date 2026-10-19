@@ -616,6 +616,89 @@ dialog::backdrop{background:rgba(14,40,36,.62)}
   .lvs{grid-template-columns:repeat(2,minmax(0,1fr))}
   .doc-types{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* 2026 교사용 작업 흐름: 상태 확인 → 날짜 선택 → 한 줄 입력 */
+:root{--paper:#f3f5f2;--sheet:#fff;--ink:#20332e;--ink2:#52665f;--ink3:#748780;--line:#dce5de;--blue:#176d5b;--blue-d:#145846;--blue-s:#e8f3ed;--r:14px}
+main{max-width:1440px;padding:28px clamp(20px,3vw,46px) 72px}
+.rail{background:#213d35}
+.rail .safe{background:transparent;border:0;border-top:1px solid #4d695e;border-radius:0;padding:16px 8px 0;color:#c1d0c6}
+.nav a.on{background:#e8f3e9;color:#194a3b;box-shadow:none}
+.ph{min-height:0;padding:20px 24px;margin-bottom:18px;border-radius:16px;background:#234e40;box-shadow:none}
+.ph::after{display:none}
+.ph h1{font-size:clamp(23px,2vw,31px);margin-top:2px}
+.ph .sub{font-size:14px;margin-top:5px}
+.today-line{font-size:12px;letter-spacing:.04em}
+.panel,.month,.st,.goal-card{box-shadow:none}
+.panel{padding:20px 22px}
+.quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.quick-actions button,.quick-actions a{min-height:44px;padding:7px 13px;border-radius:9px;box-shadow:none;background:#fff;font-size:13px;gap:8px}
+.quick-icon{width:23px;height:23px;border-radius:6px;font-size:16px}
+.work-overview{display:flex;gap:0;margin-bottom:16px;border:1px solid var(--line);background:#fff;border-radius:12px;overflow:hidden}
+.work-overview button{flex:1;min-width:0;min-height:58px;flex-direction:row;align-items:center;justify-content:space-between;gap:8px;border:0;border-right:1px solid var(--line);border-radius:0;background:#fff;padding:10px 15px;box-shadow:none}
+.work-overview button:last-child{border-right:0}
+.work-overview .overview-label{font-size:13px}
+.work-overview .overview-count{font-size:19px;white-space:nowrap}
+.planner-panel{padding:21px 23px;margin-bottom:14px}
+.planner-toolbar{margin-bottom:13px;align-items:flex-end}
+.planner-toolbar h2{font-size:23px;margin:0;line-height:1.2}
+.section-eyebrow{display:block;font-size:10px;font-weight:850;letter-spacing:.14em;color:#729382;margin-bottom:4px}
+.planner-hint{font-size:12px;color:var(--ink2)}
+.filter-row{display:flex;align-items:center;gap:12px;margin-bottom:17px;border-bottom:1px solid var(--line);padding-bottom:13px;min-width:0}
+.filter-label{font-size:12px;font-weight:800;color:var(--ink2);white-space:nowrap}
+.cf-bar{flex:1;display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;gap:5px;margin:0;padding:2px 1px 4px;min-width:0;scrollbar-width:thin}
+.chip.cf{min-height:36px;padding:5px 10px;border-radius:8px;font-size:12px;font-weight:750;white-space:nowrap;flex:none}
+.chip.cf .cdot-s{width:11px;height:11px;margin-right:5px}
+.filter-manage{min-height:36px;flex:none;border:0;background:transparent;color:var(--blue-d);font-size:12px;font-weight:800;cursor:pointer;padding:4px 2px}
+.filter-manage:hover{text-decoration:underline}
+.planner-month-head{margin:0 0 12px}
+.planner-month-head h3{font-size:19px}
+.mcal{gap:4px}
+.mcal .month-week-pick{min-height:70px;background:#e8f2eb;border:0;color:#265c45}
+.mcal .month-week-pick.active{background:#1d6b51}
+.day{border-radius:8px}
+.day-detail{margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.day-detail-head{display:flex;align-items:baseline;gap:10px;margin-bottom:7px}
+.day-detail-head strong{font-size:16px}
+.day-detail-head span{font-size:12px;color:var(--ink2)}
+.day-detail-empty{font-size:13px;color:var(--ink2);padding:2px 0 10px}
+.add-row.day-add{display:flex;align-items:center;gap:7px;margin:8px 0 0}
+.add-row.day-add input{flex:1;min-width:0;min-height:40px;font-size:14px}
+.add-row.day-add .btn{flex:none;min-height:40px;padding:7px 12px;font-size:13px}
+.add-row.day-add .btn.ghost{background:transparent;border-color:transparent}
+.planner-week-layout{gap:15px}
+.mini-month{border-radius:10px;background:#f8faf8}
+.mini-month-hint{display:none}
+.week-title{font-size:18px;margin:0 0 10px}
+.wd{border-radius:10px;min-height:125px;padding:9px;background:#fff}
+.wd.today{background:#fffaf0;border-color:#bc8a37;box-shadow:none}
+.wempty{color:#487666;font-weight:700;font-size:12px;padding:5px 0}
+.wadd{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+.wadd input{flex:1 1 100%;min-height:38px;font-size:13px}
+.wadd-actions{display:flex;gap:5px;flex-wrap:wrap;width:100%}
+.wadd-actions .btn{flex:0 1 auto;min-height:34px;padding:5px 9px;font-size:12px}
+.wadd-actions .btn.ghost{background:transparent;border-color:transparent}
+.legend{font-size:12px;color:var(--ink2)}
+.home-someday{background:#fff;border-color:var(--line)}
+.done-panel{background:#fff}
+@media(max-width:899px){
+  main{padding:15px 14px 96px}
+  .ph{padding:19px;margin-bottom:14px;border-radius:14px}
+  .ph h1{font-size:24px}
+  .quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .quick-actions button,.quick-actions a{min-height:44px;font-size:12px;padding:7px 9px}
+  .work-overview button{min-height:58px;flex-direction:column;align-items:flex-start;gap:0;padding:8px}
+  .work-overview .overview-label{font-size:11px}
+  .work-overview .overview-count{font-size:17px}
+  .planner-panel{padding:17px 15px}
+  .planner-toolbar h2{font-size:20px}
+  .planner-hint{font-size:11px}
+  .filter-row{gap:7px;margin-bottom:13px}
+  .filter-label{display:none}
+  .filter-manage{font-size:11px}
+  .mcal .month-week-pick{min-height:50px}
+  .add-row.day-add{flex-wrap:wrap}
+  .add-row.day-add input{flex:1 1 100%}
+  .add-row.day-add .btn{flex:0 1 auto}
+}
 @media(prefers-reduced-motion:reduce){.nav a,.btn{transition:none}}
 @media print{.paper{box-shadow:none}.doc-card{border-color:#1d2935}}
 
@@ -822,7 +905,7 @@ function catDot(x, k){
 const passCat = x => !ui.catFilter || (ui.catFilter === 'none' ? !x.cat || !catOf(x) : x.cat === ui.catFilter);
 function catFilterBar(){
   const chip = (id, label, color, hollow) => `<button class="chip cf ${ui.catFilter===id?'on':''}" aria-pressed="${ui.catFilter===id}" data-act="catFilter" data-c="${id??''}">${color||hollow?`<i class="cdot-s ${hollow?'none':''}" style="${color?`--c:${color}`:''}"></i>`:''}${label}</button>`;
-  return `<div class="chips cf-bar" role="group" aria-label="업무 카테고리로 보기">${chip(null,'전체')}${S.cats.map(c => chip(c.id, esc(c.name), c.color)).join('')}${chip('none','없음',null,true)}<button class="chip cf" data-act="catManage">＋ 카테고리 관리</button></div>`;
+  return `<div class="filter-row"><span class="filter-label">분류</span><div class="chips cf-bar" role="group" aria-label="업무 카테고리로 보기">${chip(null,'전체')}${S.cats.map(c => chip(c.id, esc(c.name), c.color)).join('')}${chip('none','미분류',null,true)}</div><button class="filter-manage" type="button" data-act="catManage" aria-label="카테고리 관리">분류 관리</button></div>`;
 }
 function catPopup(anchor){
   closeCatPop();
@@ -998,8 +1081,8 @@ function weekBoard(){
       const k = ymd(d), list = evs[k] || [], w = d.getDay();
       return `<div class="wd ${k===t?'today':''} ${w===0||w===6?'wkend':''} ${k<t?'past':''}" data-act="weekDayOpen" data-d="${k}">
         <button type="button" class="wh week-day-head" data-act="weekDayOpen" data-d="${k}" aria-label="${d.getMonth()+1}월 ${d.getDate()}일 할 일 쓰기"><b class="${w===0?'sun':w===6?'sat':''}">${DOW[w]}</b> <span class="wdn">${d.getMonth()+1}/${d.getDate()}</span>${k===t?' <span class="tag y">오늘</span>':''}${list.length?`<span class="wc">${list.filter(e=>!e.done).length}</span>`:''}</button>
-        <div class="wl">${list.length ? list.map(item).join('') : '<div class="wempty">없음</div>'}</div>
-        ${ui.weekEntryDate===k?`<form data-form="dayTodo" data-date="${k}" class="wadd"><input type="text" name="text" placeholder="할 일을 적어 주세요" aria-label="${d.getMonth()+1}월 ${d.getDate()}일 할 일 추가" required><button class="btn sm" type="submit">저장</button><button class="btn sm ghost" type="button" data-act="weekEntryClose">취소</button></form>`:''}
+        <div class="wl">${list.length ? list.map(item).join('') : '<div class="wempty">+ 할 일 적기</div>'}</div>
+        ${ui.weekEntryDate===k?`<form data-form="dayTodo" data-date="${k}" class="wadd"><input type="text" name="text" placeholder="할 일 입력" aria-label="${d.getMonth()+1}월 ${d.getDate()}일 할 일 추가" required><div class="wadd-actions"><button class="btn sm" type="submit">저장</button><button class="btn sm ghost" type="button" data-act="taskNew" data-m="${d.getMonth()+1}" data-d="${k}">업무로 등록</button><button class="btn sm ghost" type="button" data-act="weekEntryClose">취소</button></div></form>`:''}
       </div>`;
     }).join('')}</div>
     <div class="legend"><span>날짜 칸을 누르면 그날 할 일을 적을 수 있어요. 글자를 누르면 바로 수정할 수 있어요.</span></div>
@@ -1043,12 +1126,12 @@ function monthCal(vm, showUndated = true, autoSelectToday = true){
   let detail = '';
   if (ui.homeDay){
     const list = evs[ui.homeDay] || [];
-    detail = `<div class="day-detail"><div class="sec-t" style="margin-top:6px">${fmtMDw(ui.homeDay)}</div>
-      ${list.length ? list.map(e => e.k==='task' ? taskRow(e.x) : todoRow(e.x)).join('') : '<div class="small muted" style="padding:4px 0 8px">이 날은 정해 둔 일이 없어요.</div>'}
+    detail = `<div class="day-detail"><div class="day-detail-head"><strong>${fmtMDw(ui.homeDay)}</strong><span>${list.filter(e=>!e.done).length}개 남음</span></div>
+      ${list.length ? list.map(e => e.k==='task' ? taskRow(e.x) : todoRow(e.x)).join('') : '<div class="day-detail-empty">일정이 없어요. 아래에 바로 적어 주세요.</div>'}
       <form class="add-row day-add" data-form="dayTodo" data-date="${ui.homeDay}">
-        <input type="text" name="text" placeholder="이 날 할 일 적기" aria-label="${fmtMD(ui.homeDay)} 할 일" required>
-        <button class="btn" type="submit">할 일 추가</button>
-        <button class="btn ghost" type="button" data-act="taskNew" data-m="${vm}" data-d="${ui.homeDay}">업무로 추가</button>
+        <input type="text" name="text" placeholder="할 일 입력" aria-label="${fmtMD(ui.homeDay)} 할 일" required>
+        <button class="btn" type="submit">저장</button>
+        <button class="btn ghost" type="button" data-act="taskNew" data-m="${vm}" data-d="${ui.homeDay}">업무로 등록</button>
       </form></div>`;
   } else {
     detail = `<div class="small muted" style="margin:6px 0 4px">날짜를 누르면 그날 할 일을 보고 추가할 수 있어요.</div>`;
@@ -1062,14 +1145,13 @@ function plannerPanel(vm, showUndated = true){
   const year = vm >= 3 ? schoolYear() : schoolYear()+1;
   const prev = vm === 1 ? 12 : vm-1, next = vm === 12 ? 1 : vm+1;
   return `<section class="panel planner-panel">
-    <div class="planner-toolbar"><div><h2>업무 일정</h2><p>월 달력 맨 왼쪽의 ‘1주’처럼 주를 누르면 해당 주 일정이 열려요.</p></div></div>
+    <div class="planner-toolbar"><div><span class="section-eyebrow">PLANNER</span><h2>업무 일정</h2></div><span class="planner-hint">${mode==='week'?'날짜를 눌러 할 일을 적으세요.':'왼쪽 주 번호를 누르면 한 주가 열려요.'}</span></div>
     ${catFilterBar()}
     ${mode==='week' ? weekBoard() : `<div class="planner-month-head"><h3>${year}년 ${vm}월</h3><div class="row">
       <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${prev}" aria-label="이전 달">‹</button>
       ${vm!==cm?`<button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${cm}">이번 달</button>`:''}
       <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${next}" aria-label="다음 달">›</button>
     </div></div>${monthCal(vm, showUndated, showUndated)}`}
-    <div class="planner-footer"><span class="small">색 점을 누르면 그 업무의 카테고리를 바꿀 수 있어요.</span><button class="btn sm ghost" type="button" data-act="catManage">카테고리 만들기·색 바꾸기</button></div>
   </section>`;
 }
 function vHome(){
