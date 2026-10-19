@@ -106,12 +106,7 @@ main{padding:28px 32px 64px;max-width:1200px;width:100%}
 .day .pips i{width:6px;height:6px;border-radius:50%;background:var(--blue)}
 .day .pips i.td{background:var(--green)}
 .add-row.day-add{grid-template-columns:1fr auto auto;margin-top:8px}
-.home-top{margin-bottom:16px}
-.today-panel{border:2px solid var(--ink)}
-.today-add{grid-template-columns:1fr auto;margin-bottom:4px}
-.today-add input{font-size:16px;padding:11px 13px}
 .someday-add{grid-template-columns:1fr auto;margin-top:10px}
-.today-panel .item .btn.sm{padding:3px 8px;font-size:12.5px}
 .sec-h{font-size:19px;margin:22px 0 10px}
 .week-panel{margin-bottom:16px}
 .cdot{width:14px;height:14px;border-radius:50%;border:0;padding:0;flex:none;cursor:pointer;background:var(--c);margin-top:4px;position:relative}
@@ -320,8 +315,8 @@ dialog.ask{width:min(400px,92vw)}
   .add-row{grid-template-columns:1fr 1fr}
   .add-row input[type=text]{grid-column:1/-1}
   .add-row.day-add{grid-template-columns:1fr 1fr}
-  .add-row.today-add,.add-row.someday-add{grid-template-columns:1fr auto}
-  .add-row.today-add input[type=text],.add-row.someday-add input[type=text]{grid-column:auto}
+  .add-row.someday-add{grid-template-columns:1fr auto}
+  .add-row.someday-add input[type=text]{grid-column:auto}
   .week{grid-template-columns:minmax(0,1fr)}
   .wd{min-height:0}
   .wd .wempty{display:none}
@@ -400,8 +395,6 @@ main{padding:34px clamp(22px,3.5vw,56px) 90px;max-width:1500px}
 .panel{padding:23px 25px}
 .panel h2{font-size:20px;letter-spacing:-.035em;margin-bottom:14px;line-height:1.35;color:var(--ink)}
 .panel h2 .more{font-size:13.5px;color:var(--blue-d);font-weight:800;text-decoration:none;border-bottom:1px solid currentColor;white-space:nowrap}
-.today-panel{border:2px solid #c59a4f;background:linear-gradient(135deg,#fffefa 72%,#fff5da)}
-.today-panel h2::before{content:'';width:9px;height:24px;background:#dca957;border-radius:5px;display:inline-block;margin-right:5px;vertical-align:-4px}
 .week-panel{margin-bottom:21px}
 .muted{color:var(--ink3)}
 .empty{background:#f2f6f1;color:var(--ink2);border:1px dashed #d2e1d5;padding:16px;border-radius:12px}
@@ -611,7 +604,6 @@ dialog::backdrop{background:rgba(14,40,36,.62)}
   .planner-toolbar{align-items:flex-start}
   .planner-week-layout .week{grid-template-columns:minmax(0,1fr)}
   .mini-month{max-width:390px;width:100%;margin:0 auto}
-  .today-panel h2::before{height:20px}
 }
 @media(max-width:430px){
   .nav a{font-size:10px}
@@ -1086,12 +1078,9 @@ function vHome(){
   // 오늘과 놓친 일
   const todayList = (evs[t] || []).filter(e => !e.done);
   const late = [];
-  let oldCount = 0;   // 30일보다 오래된 놓친 업무는 업무 달력에서 정리
-  S.tasks.forEach(x => { const d = taskDate(x); if (d && d < t && !isDone(x.id) && passCat(x)){ if (dayDiff(d) >= -30) late.push({k:'task', x, d}); else oldCount++; } });
+  S.tasks.forEach(x => { const d = taskDate(x); if (d && d < t && !isDone(x.id) && passCat(x) && dayDiff(d) >= -30) late.push({k:'task', x, d}); });
   S.todos.forEach(x => { if (x.date && x.date < t && !x.done && passCat(x)) late.push({k:'todo', x, d:x.date}); });
   late.sort((a,b) => a.d.localeCompare(b.d));
-  const idx = ORDER.indexOf(cm);
-  const pastMonth = oldCount + S.tasks.filter(x => !x.due && ORDER.indexOf(x.m) < idx && !isDone(x.id) && passCat(x)).length;
   // 날짜를 정하지 않은 업무와 할 일
   const monthUndated = tasksOf(cm).filter(x => !x.due && !isDone(x.id) && passCat(x));
   const someday = S.todos.filter(x => !x.date && !x.done && passCat(x));
@@ -1109,8 +1098,6 @@ function vHome(){
   const real = ss.filter(s => !s.demo).length;
   const needBackup = real && (S.lastExport ? dayDiff(S.lastExport) < -30 : (S.createdAt && dayDiff(S.createdAt) < -7));
   const row = e => e.k === 'task' ? taskRow(e.x) : todoRow(e.x);
-  const lateRow = e => e.k === 'task' ? taskRow(e.x)
-    : todoRow(e.x).replace('<button class="icon-btn del"', `<button class="btn sm ghost" data-act="todoToday" data-id="${e.x.id}">오늘로</button><button class="icon-btn del"`);
 
   return `
   <header class="ph"><div>
@@ -1135,16 +1122,6 @@ function vHome(){
     <button type="button" data-act="focusToday"><span class="overview-label">오늘 남은 일</span><span class="overview-count">${todayLeft}개</span></button>
     <button type="button" data-act="focusLater"><span class="overview-label">나중에 할 일</span><span class="overview-count">${laterLeft}개</span></button>
     <button type="button" data-act="focusDone"><span class="overview-label">완료된 일</span><span class="overview-count">${completed.length}개</span></button>
-  </div>
-  <div class="home-top">
-    <section class="panel today-panel">
-      <h2>오늘 <span class="small muted">${fmtMDw(t)}</span></h2>
-      ${late.length ? `<div class="tg late">놓친 일<span>${late.length}</span></div>${late.map(lateRow).join('')}` : ''}
-      ${todayList.length ? `<div class="tg now">오늘<span>${todayList.length}</span></div>${todayList.map(row).join('')}`
-        : `<div class="empty" style="margin-top:10px">오늘 남은 일이 없어요.</div>`}
-      <div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn sm ghost" type="button" data-act="focusToday">주간 달력에서 오늘 할 일 쓰기</button></div>
-      ${pastMonth ? `<div class="small muted" style="margin-top:10px">지난달까지 남은 업무 ${pastMonth}개 · <a href="#cal" data-act="goMonth" data-m="${cm}">업무 달력에서 확인</a></div>` : ''}
-    </section>
   </div>
   ${plannerPanel(vm, false)}
   <div class="row" style="justify-content:flex-end;margin:-6px 0 15px"><a class="more month-link" href="#cal" data-act="goMonth" data-m="${vm}">한 해 업무 달력 보기 →</a></div>
