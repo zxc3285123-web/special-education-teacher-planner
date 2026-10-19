@@ -938,7 +938,7 @@ function todoRow(x){
   return `<div class="item ${x.done?'done':''}">
     <button class="ck ${x.done?'on':''}" data-act="todoToggle" data-id="${x.id}" aria-pressed="${x.done}" aria-label="${esc(x.text)} 완료">${CHECK}</button>
     ${catDot(x,'todo')}<div class="tx"><span class="tt ed" data-k="todo" data-id="${x.id}" data-act="inlineEdit" tabindex="0" title="눌러서 수정">${esc(x.text)}</span> ${x.date ? (x.done ? `<span class="tag gr">${fmtMD(x.date)}</span>` : ddayTag(x.date)) : ''}</div>
-    ${!x.date&&!x.done?`<button class="schedule-link" type="button" data-act="todoSchedule" data-id="${x.id}" aria-label="${esc(x.text)} 날짜 정하기">날짜 정하기</button>`:''}
+    ${!x.done?`<button class="schedule-link" type="button" data-act="todoSchedule" data-id="${x.id}" aria-label="${esc(x.text)} 날짜 ${x.date?'변경':'정하기'}">날짜 ${x.date?'변경':'정하기'}</button>`:''}
     <button class="icon-btn del" data-act="todoDel" data-id="${x.id}" aria-label="${esc(x.text)} 삭제" title="삭제">🗑️</button></div>`;
 }
 function eventsMap(){
@@ -990,6 +990,7 @@ function weekBoard(){
   const item = e => `<div class="wi ${e.done?'done':''}">
       <button class="ck sm ${e.done?'on':''}" data-act="${e.k==='task'?'taskToggle':'todoToggle'}" data-id="${e.x.id}" aria-pressed="${e.done}" aria-label="${esc(e.title)} 완료">${CHECK}</button>
       ${catDot(e.x, e.k)}<span class="tt ed ${e.k==='task'?'is-task':''}" data-k="${e.k}" data-id="${e.x.id}" data-act="inlineEdit" tabindex="0" title="눌러서 수정">${esc(e.title)}</span>
+      ${e.k==='todo'&&!e.done?`<button class="icon-btn" data-act="todoSchedule" data-id="${e.x.id}" aria-label="${esc(e.title)} 날짜 변경" title="날짜 변경">날짜</button>`:''}
       <button class="icon-btn del" data-act="${e.k==='task'?'taskDel':'todoDel'}" data-id="${e.x.id}" aria-label="${esc(e.title)} 삭제" title="삭제">🗑️</button></div>`;
   return `<div class="planner-week-layout">${miniMonthNav(start)}<div class="week-board">
     <h3 class="week-title"><span>${label} <span class="small muted">${days[0].getMonth()+1}/${days[0].getDate()} ~ ${days[6].getMonth()+1}/${days[6].getDate()}</span></span>
@@ -1250,9 +1251,9 @@ function taskDialog(t, m, preset){
 function todoScheduleDialog(todo){
   if (!todo) return;
   openDlg(`<form method="dialog" data-form="todoSchedule" data-id="${todo.id}">
-    <div class="dlg-h">할 일 날짜 정하기<button type="button" class="icon-btn" data-act="dlgClose" aria-label="닫기">닫기</button></div>
-    <div class="dlg-b"><p>${esc(todo.text)}</p><label class="f"><span>처리할 날짜</span><input type="date" name="date" value="${todayStr()}" required></label></div>
-    <div class="dlg-f"><button type="button" class="btn ghost" data-act="dlgClose">취소</button><button class="btn" type="submit">달력에 넣기</button></div>
+    <div class="dlg-h">할 일 날짜 ${todo.date?'변경':'정하기'}<button type="button" class="icon-btn" data-act="dlgClose" aria-label="닫기">닫기</button></div>
+    <div class="dlg-b"><p>${esc(todo.text)}</p><label class="f"><span>처리할 날짜</span><input type="date" name="date" value="${todo.date||todayStr()}" required></label></div>
+    <div class="dlg-f">${todo.date?`<button type="button" class="btn ghost left" data-act="todoUndate" data-id="${todo.id}">나중에 할 일로 옮기기</button>`:''}<button type="button" class="btn ghost" data-act="dlgClose">취소</button><button class="btn" type="submit">저장</button></div>
   </form>`);
 }
 
@@ -1645,7 +1646,7 @@ document.addEventListener('click', async e => {
     case 'demoAdd': demoAdd(); break;
     case 'demoDel': if (await ask('예시 학생과 그 기록을 지울까요?', '지우기')) demoDel(); break;
     case 'focusToday': document.querySelector('.today-add input[name="text"]')?.focus(); break;
-    case 'focusLater': document.querySelector('.home-someday')?.scrollIntoView({block:'start',behavior:'smooth'}); break;
+    case 'focusLater': document.querySelector('.home-someday input[name="text"]')?.focus(); break;
     case 'goMonth': e.preventDefault(); ui.homeMonth = +b.dataset.m; ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); go('cal'); break;
     case 'taskToggle': { const l = doneList(); const i = l.indexOf(id); if (i >= 0) l.splice(i,1); else l.push(id); save(); render(); break; }
     case 'pastDone': { const idx = ORDER.indexOf(new Date().getMonth()+1); const l = doneList();
@@ -1653,6 +1654,7 @@ document.addEventListener('click', async e => {
     case 'icsExport': exportIcs(); break;
     case 'todoToday': { const x = S.todos.find(y => y.id === id); if (x){ x.date = todayStr(); save(); toast('오늘로 옮겼어요'); render(); } break; }
     case 'todoSchedule': todoScheduleDialog(S.todos.find(x => x.id === id)); break;
+    case 'todoUndate': { const todo = S.todos.find(x => x.id === id); if (todo){ todo.date = ''; save(); closeDlg(); toast('나중에 할 일로 옮겼어요'); render(); } break; }
     case 'pickMonth': ui.homeMonth = +b.dataset.m; ui.homeDay = null; ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); render(); break;
     case 'showMonth': ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); render(); break;
     case 'weekMove': { ui.weekOff = +b.dataset.n === 0 ? 0 : (ui.weekOff||0) + +b.dataset.n;
@@ -1801,7 +1803,7 @@ function handleForm(f){
   } else if (kind === 'todoSchedule'){
     const todo = S.todos.find(x => x.id === f.dataset.id), date = String(fd.get('date')||'');
     if (!todo || !/^\d{4}-\d{2}-\d{2}$/.test(date)){ toast('날짜를 골라 주세요'); return; }
-    todo.date = date; save(); closeDlg(); toast('달력에 넣었어요'); render();
+    const changing = !!todo.date; todo.date = date; save(); closeDlg(); toast(changing?'날짜를 바꿨어요':'달력에 넣었어요'); render();
   } else if (kind === 'dayTodo'){
     const text = (fd.get('text')||'').trim(); if (!text){ toast('할 일을 적어 주세요'); return; }
     const date = f.dataset.date, wadd = f.classList.contains('wadd');
