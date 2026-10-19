@@ -483,6 +483,13 @@ input::placeholder,textarea::placeholder{color:#687e77;opacity:1}
 .work-overview .overview-label{font-size:13px;color:var(--ink2);font-weight:700}
 .work-overview .overview-count{font-size:22px;line-height:1.2;font-weight:850;color:#1b514b}
 .work-overview .urgent .overview-count{color:#af443b}
+.done-panel{margin-top:16px;background:#fbfdf9}
+.done-panel summary{display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;cursor:pointer;font-size:17px;font-weight:800}
+.done-panel summary::-webkit-details-marker{display:none}
+.done-panel summary .small{font-weight:700;color:var(--ink2)}
+.done-panel summary::after{content:'펼치기';font-size:13px;color:#176452;font-weight:800}
+.done-panel[open] summary::after{content:'접기'}
+.done-panel .done-list{margin-top:12px}
 .home-someday{border-color:#bdd5c6;background:#fffefa}
 .home-someday .someday-help{color:var(--ink2);font-size:13px;margin:-2px 0 11px}
 .schedule-link{border:1px solid #b7d3c1;background:#eff8f0;color:#176452;border-radius:8px;padding:4px 9px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
@@ -1078,7 +1085,7 @@ function vHome(){
   const vm = ui.homeMonth || cm;
   const evs = eventsMap();
   // 오늘과 놓친 일
-  const todayList = evs[t] || [];
+  const todayList = (evs[t] || []).filter(e => !e.done);
   const late = [];
   let oldCount = 0;   // 30일보다 오래된 놓친 업무는 업무 달력에서 정리
   S.tasks.forEach(x => { const d = taskDate(x); if (d && d < t && !isDone(x.id) && passCat(x)){ if (dayDiff(d) >= -30) late.push({k:'task', x, d}); else oldCount++; } });
@@ -1087,11 +1094,14 @@ function vHome(){
   const idx = ORDER.indexOf(cm);
   const pastMonth = oldCount + S.tasks.filter(x => !x.due && ORDER.indexOf(x.m) < idx && !isDone(x.id) && passCat(x)).length;
   // 날짜를 정하지 않은 업무와 할 일
-  const monthUndated = tasksOf(cm).filter(x => !x.due && passCat(x));
-  const someday = S.todos.filter(x => !x.date && passCat(x) && (!x.done || (x.doneAt && dayDiff(x.doneAt) >= -1))).sort((a,b) => a.done - b.done);
-  const todayLeft = todayList.filter(e => !e.done).length;
-  const upcoming7 = Object.entries(evs).filter(([d]) => dayDiff(d) >= 1 && dayDiff(d) <= 7).reduce((n,[,items]) => n + items.filter(e => !e.done).length, 0);
-  const laterLeft = monthUndated.filter(x => !isDone(x.id)).length + someday.filter(x => !x.done).length;
+  const monthUndated = tasksOf(cm).filter(x => !x.due && !isDone(x.id) && passCat(x));
+  const someday = S.todos.filter(x => !x.date && !x.done && passCat(x));
+  const todayLeft = todayList.length;
+  const laterLeft = monthUndated.length + someday.length;
+  const completed = [
+    ...S.tasks.filter(x => isDone(x.id) && passCat(x)).map(x => ({k:'task', x, d:taskDate(x)||`${x.m>=3?schoolYear():schoolYear()+1}-${pad(x.m)}-01`})),
+    ...S.todos.filter(x => x.done && passCat(x)).map(x => ({k:'todo', x, d:x.doneAt||x.date||''}))
+  ].sort((a,b) => b.d.localeCompare(a.d));
   const ss = S.students;
   const noEvac = ss.filter(s => !(s.evacHelper||'').trim()).length;
   const noMeal = ss.filter(s => !(s.meal||'').trim()).length;
@@ -1124,19 +1134,16 @@ function vHome(){
   ${needBackup ? `<section class="note warn"><b>백업한 지 오래됐어요.</b> 브라우저 기록을 지우면 학생 카드와 관찰 기록도 함께 지워져요. <a href="#set">설정에서 백업 파일 받기</a></section>` : ''}
   <div class="work-overview" aria-label="업무 한눈에 보기">
     <button type="button" data-act="focusToday"><span class="overview-label">오늘 남은 일</span><span class="overview-count">${todayLeft}개</span></button>
-    <button type="button" data-act="goCal"><span class="overview-label">앞으로 7일</span><span class="overview-count">${upcoming7}개</span></button>
     <button type="button" data-act="focusLater"><span class="overview-label">나중에 할 일</span><span class="overview-count">${laterLeft}개</span></button>
+    <button type="button" data-act="focusDone"><span class="overview-label">완료된 일</span><span class="overview-count">${completed.length}개</span></button>
   </div>
   <div class="home-top">
     <section class="panel today-panel">
       <h2>오늘 <span class="small muted">${fmtMDw(t)}</span></h2>
-      <form class="add-row today-add" data-form="dayTodo" data-date="${t}">
-        <input type="text" name="text" placeholder="오늘 할 일을 적고 Enter" aria-label="오늘 할 일 추가" required>
-        <button class="btn" type="submit">추가</button>
-      </form>
       ${late.length ? `<div class="tg late">놓친 일<span>${late.length}</span></div>${late.map(lateRow).join('')}` : ''}
       ${todayList.length ? `<div class="tg now">오늘<span>${todayList.length}</span></div>${todayList.map(row).join('')}`
-        : `<div class="empty" style="margin-top:10px">${late.length ? '오늘로 정한 일은 아직 없어요.' : '오늘 할 일이 없어요. 위 입력칸에 새 할 일을 적어 보세요.'}</div>`}
+        : `<div class="empty" style="margin-top:10px">오늘 남은 일이 없어요.</div>`}
+      <div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn sm ghost" type="button" data-act="focusToday">주간 달력에서 오늘 할 일 쓰기</button></div>
       ${pastMonth ? `<div class="small muted" style="margin-top:10px">지난달까지 남은 업무 ${pastMonth}개 · <a href="#cal" data-act="goMonth" data-m="${cm}">업무 달력에서 확인</a></div>` : ''}
     </section>
   </div>
@@ -1146,7 +1153,7 @@ function vHome(){
     <h2>나중에 할 일 <a class="more" href="#cal" data-act="goMonth" data-m="${cm}">업무 달력</a></h2>
     <p class="someday-help">날짜가 정해지면 ‘날짜 정하기’를 눌러 달력에 옮길 수 있어요.</p>
     ${monthUndated.length ? `<div class="tg">${cm}월 중 처리할 업무<span>${monthUndated.length}</span></div>${monthUndated.map(x => taskRow(x)).join('')}` : ''}
-    <div class="tg">날짜를 정하지 않은 할 일<span>${someday.filter(x=>!x.done).length}</span></div>
+    <div class="tg">날짜를 정하지 않은 할 일<span>${someday.length}</span></div>
     ${someday.length ? someday.map(todoRow).join('') : '<div class="small muted" style="padding:6px 0">날짜를 아직 정하지 않은 할 일을 적어 두세요.</div>'}
     <form class="add-row someday-add" data-form="todo">
       <input type="text" name="text" placeholder="나중에 할 일 적기" aria-label="나중에 할 일 추가" required>
@@ -1172,7 +1179,11 @@ function vHome(){
       <h2>바로 출력하기</h2>
       <div class="row">${DOCS.map(d => `<button class="btn sm ghost" data-act="docGo" data-k="${d.k}">${d.name}</button>`).join('')}</div>
     </section>
-  </div>`;
+  </div>
+  <details class="panel done-panel" id="doneHome">
+    <summary><span>완료된 일 <span class="small">${completed.length}개</span></span></summary>
+    <div class="done-list">${completed.length ? completed.map(row).join('') : '<div class="empty">완료한 일이 아직 없어요.</div>'}</div>
+  </details>`;
 }
 
 /* ===== 업무 달력 ===== */
@@ -1645,8 +1656,15 @@ document.addEventListener('click', async e => {
     case 'welcomeOk': S.welcomed = true; save(); render(); break;
     case 'demoAdd': demoAdd(); break;
     case 'demoDel': if (await ask('예시 학생과 그 기록을 지울까요?', '지우기')) demoDel(); break;
-    case 'focusToday': document.querySelector('.today-add input[name="text"]')?.focus(); break;
+    case 'focusToday': {
+      ui.weekOff = 0; ui.homeMonth = new Date().getMonth()+1;
+      ui.miniMonth = weekFocusMonth(weekStart(new Date())); ui.weekEntryDate = todayStr();
+      ui.calendarMode = 'week'; S.settings.calendarMode = 'week'; save(); render();
+      requestAnimationFrame(() => document.querySelector(`.wadd[data-date="${ui.weekEntryDate}"] input[name="text"]`)?.focus());
+      break;
+    }
     case 'focusLater': document.querySelector('.home-someday input[name="text"]')?.focus(); break;
+    case 'focusDone': { const details = document.getElementById('doneHome'); if (details){ details.open = true; details.scrollIntoView({block:'start',behavior:'smooth'}); } break; }
     case 'goMonth': e.preventDefault(); ui.homeMonth = +b.dataset.m; ui.calendarMode = 'month'; S.settings.calendarMode = 'month'; save(); go('cal'); break;
     case 'taskToggle': { const l = doneList(); const i = l.indexOf(id); if (i >= 0) l.splice(i,1); else l.push(id); save(); render(); break; }
     case 'pastDone': { const idx = ORDER.indexOf(new Date().getMonth()+1); const l = doneList();
