@@ -764,13 +764,20 @@ main{max-width:1370px;padding:29px clamp(22px,3.3vw,48px) 70px}
 .day.on{background:#f0f6f1;border-color:var(--blue)}
 .day.today .dn{background:#ead79e;color:#574722}
 .day .ev{background:color-mix(in srgb,var(--c) 10%,#fff);font-size:10.5px}
-.day-cat-field{flex:0 0 207px;min-width:0;min-height:40px;display:flex;align-items:center;gap:7px;padding:0 7px 0 10px;border:1px solid #cad5cb;border-radius:7px;background:#fff;cursor:pointer}
-.day-cat-field span{color:var(--ink2);font-size:12px;font-weight:700;white-space:nowrap}
-.day-cat-select{flex:1;min-width:0;width:100%;min-height:36px;padding:4px 21px 4px 0;border:0;border-radius:0;font-size:13px;color:var(--ink);background-color:transparent}
-.day-cat-select:focus{outline:none;border:0}
+.day-cat-field{position:relative;flex:0 0 207px;min-width:0;min-height:40px;border:1px solid #cad5cb;border-radius:7px;background:#fff}
+.day-cat-field summary{min-height:38px;display:flex;align-items:center;gap:7px;padding:0 10px;list-style:none;cursor:pointer}
+.day-cat-field summary::-webkit-details-marker{display:none}
+.day-cat-field summary::after{content:'⌄';margin-left:auto;color:var(--ink2);font-size:17px;line-height:1}
+.day-cat-label{color:var(--ink2);font-size:11px;font-weight:700;white-space:nowrap}
+.day-cat-current{display:inline-flex;align-items:center;gap:6px;min-width:0;color:var(--ink);font-size:13px;font-weight:600}
+.day-cat-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day-cat-current .cdot-s,.day-cat-option .cdot-s{width:12px;height:12px;flex:none;margin:0}
 .day-cat-field:focus-within{border-color:var(--blue);outline:2px solid #bbd8c4}
+.day-cat-menu{position:absolute;top:calc(100% + 5px);left:0;right:0;z-index:80;max-height:280px;overflow:auto;padding:5px;border:1px solid #cad5cb;border-radius:8px;background:#fff;box-shadow:0 10px 24px #243c3126}
+.day-cat-option{display:flex;align-items:center;gap:8px;width:100%;min-height:36px;padding:6px 9px;border:0;border-radius:5px;background:transparent;color:var(--ink);font:inherit;font-size:13px;text-align:left;cursor:pointer}
+.day-cat-option:hover,.day-cat-option:focus-visible,.day-cat-option.active{background:#edf4ef}
 .wadd .day-cat-field{flex:1 1 100%;width:100%;min-height:36px}
-.wadd .day-cat-select{font-size:12px;min-height:34px}
+.wadd .day-cat-field summary{min-height:34px}
 .week-title{font-size:17px}
 .mini-month{background:#fbfcfa;border-color:var(--line);border-radius:8px}
 .mini-month-grid .mini-week-pick{background:#eaf0e9;color:#375844}
@@ -1029,7 +1036,10 @@ function catFilterBar(){
 function dayCatSelect(){
   const selected = ui.catFilter === 'none' ? '' : S.cats.some(c => c.id === ui.catFilter) ? ui.catFilter
     : S.cats.some(c => c.id === ui.lastDayCat) ? ui.lastDayCat : '';
-  return `<label class="day-cat-field"><span>카테고리</span><select class="day-cat-select" name="cat" aria-label="할 일 카테고리"><option value="" ${selected?'':'selected'}>없음</option>${S.cats.map(c => `<option value="${c.id}" ${selected===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label>`;
+  const current = S.cats.find(c => c.id === selected);
+  const dot = c => `<i class="cdot-s ${c?'':'none'}" ${c?`style="--c:${c.color}"`:''} aria-hidden="true"></i>`;
+  const option = c => `<button type="button" class="day-cat-option ${selected===(c?.id||'')?'active':''}" data-act="dayCatChoose" data-c="${c?.id||''}" aria-pressed="${selected===(c?.id||'')}">${dot(c)}${c?esc(c.name):'없음'}</button>`;
+  return `<details class="day-cat-field"><summary aria-label="할 일 카테고리 선택"><span class="day-cat-label">카테고리</span><span class="day-cat-current">${dot(current)}<span class="day-cat-name">${current?esc(current.name):'없음'}</span></span></summary><input type="hidden" name="cat" value="${selected}"><div class="day-cat-menu" role="group" aria-label="할 일 카테고리">${option(null)}${S.cats.map(option).join('')}</div></details>`;
 }
 function catPopup(anchor){
   closeCatPop();
@@ -1829,6 +1839,7 @@ function closeDlg(){ const d = $('#dlg'); if (d.open) d.close(); }
 /* ===== 사건 처리 ===== */
 document.addEventListener('click', async e => {
   if (!e.target.closest('#catPop') && !e.target.closest('.cdot')) { closeCatPop(); ui._popFor = null; }
+  document.querySelectorAll('.day-cat-field[open]').forEach(p => { if (!p.contains(e.target)) p.open = false; });
   const b = e.target.closest('[data-act]');
   if (!b){
     const a = e.target.closest('a[href^="#"]');
@@ -1878,6 +1889,25 @@ document.addEventListener('click', async e => {
     case 'catManage': go('set'); requestAnimationFrame(() => document.getElementById('catSettings')?.scrollIntoView({block:'start'})); break;
     case 'goCal': go('cal'); break;
     case 'inlineEdit': startInline(b); break;
+
+    case 'dayCatChoose': {
+      const picker = b.closest('.day-cat-field'), cat = S.cats.find(c => c.id === b.dataset.c);
+      if (!picker) break;
+      const value = cat?.id || '';
+      picker.querySelector('input[name="cat"]').value = value;
+      picker.querySelector('.day-cat-name').textContent = cat?.name || '없음';
+      const dot = picker.querySelector('.day-cat-current .cdot-s');
+      dot.classList.toggle('none', !cat);
+      if (cat) dot.style.setProperty('--c', cat.color); else dot.style.removeProperty('--c');
+      picker.querySelectorAll('.day-cat-option').forEach(opt => {
+        const active = (opt.dataset.c || '') === value;
+        opt.classList.toggle('active', active);
+        opt.setAttribute('aria-pressed', String(active));
+      });
+      picker.open = false;
+      picker.querySelector('summary').focus();
+      break;
+    }
 
     case 'catPick': e.stopPropagation(); if (document.getElementById('catPop') && ui._popFor === b.dataset.id) { closeCatPop(); ui._popFor = null; } else { catPopup(b); ui._popFor = b.dataset.id; } break;
     case 'catSet': { const k = b.dataset.k, obj = k === 'task' ? S.tasks.find(t => t.id === b.dataset.id) : S.todos.find(t => t.id === b.dataset.id);
