@@ -698,6 +698,117 @@ main{max-width:1440px;padding:28px clamp(20px,3vw,46px) 72px}
   .add-row.day-add input{flex:1 1 100%}
   .add-row.day-add .btn{flex:0 1 auto}
 }
+/* 차분한 업무용 화면: 단일 강조색, 같은 간격, 달력 중심 배치 */
+:root{--paper:#f7f8f5;--sheet:#fff;--ink:#26322d;--ink2:#5c6962;--ink3:#78847d;--line:#dfe5df;--blue:#235d50;--blue-d:#1d5145;--blue-s:#edf4ef;--mark:#f1dfaa;--r:10px}
+body{background:var(--paper);font-size:15px;line-height:1.52;letter-spacing:-.015em}
+.app{grid-template-columns:204px minmax(0,1fr)}
+.rail{background:#fff;border-right:1px solid var(--line);padding:29px 13px 20px;gap:28px;color:var(--ink);box-shadow:none}
+.brand{padding:0 13px}
+.brand::before{display:none}
+.brand b{font-size:23px;font-weight:800;letter-spacing:-.07em}
+.brand b span{background:none}
+.brand small{color:var(--ink3);font-size:11.5px;margin-top:2px}
+.nav{gap:2px}
+.nav a{color:#52635a;font-size:14px;font-weight:600;min-height:43px;border-radius:8px;padding:9px 12px;transition:background .15s,color .15s}
+.nav a:hover{background:#f0f3ef;color:var(--ink);transform:none}
+.nav a.on{background:#eaf1eb;color:#234f40;box-shadow:none}
+.nav svg{width:18px;height:18px;stroke-width:1.9}
+.rail .safe{font-size:11px;color:#7c8980;border-color:var(--line);line-height:1.5}
+main{max-width:1370px;padding:29px clamp(22px,3.3vw,48px) 70px}
+.ph{background:transparent;color:var(--ink);padding:0 0 18px;border-radius:0;border-bottom:1px solid var(--line);margin:0 0 19px;min-height:0;box-shadow:none}
+.ph::after{display:none}
+.ph h1{font-size:clamp(24px,2vw,30px);line-height:1.25;letter-spacing:-.055em;margin:2px 0 0}
+.ph .sub{color:var(--ink2);margin:5px 0 0;font-size:13px}
+.ph .sub b{color:#a95036!important}
+.today-line{color:#6b7d70;font-size:12px;font-weight:700;letter-spacing:0}
+.ph .btn.ghost{color:var(--blue-d);background:#fff;border-color:var(--line)}
+.ph .btn:not(.ghost){background:var(--blue);color:#fff}
+.ph .btn:not(.ghost):hover{background:var(--blue-d)}
+.home-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.home-heading .quick-actions{margin:0;display:flex;justify-content:flex-end;align-items:center;gap:4px}
+.home-heading .quick-actions button,.home-heading .quick-actions a{border:0;box-shadow:none;border-radius:7px;background:transparent;color:#405b4c;min-height:36px;padding:6px 10px;font-size:12px;font-weight:700}
+.home-heading .quick-actions button:hover,.home-heading .quick-actions a:hover{background:#eaf1eb;color:#1d5145}
+.home-heading .quick-actions button:first-child{background:var(--blue);color:#fff;padding:6px 12px}
+.home-heading .quick-actions button:first-child:hover{background:var(--blue-d);color:#fff}
+.home-heading .quick-icon{width:auto;height:auto;background:transparent;color:inherit;font-size:17px}
+.work-overview{border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;overflow:visible;margin:0 0 19px;padding:0 0 15px;gap:20px}
+.work-overview button{flex:0 1 auto;min-height:34px;display:flex;align-items:baseline;justify-content:flex-start;gap:8px;background:transparent;border:0;padding:4px 9px 4px 0;box-shadow:none}
+.work-overview button:last-child{border:0}
+.work-overview button:hover,.work-overview button:focus-visible{background:transparent;border:0;color:var(--blue-d)}
+.work-overview .overview-label{font-size:12px;font-weight:600;color:var(--ink2)}
+.work-overview .overview-count{font-size:17px;font-weight:800;color:var(--ink)}
+.panel,.month,.st,.goal-card{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:none}
+.panel{padding:19px 21px}
+.panel h2{font-size:18px;margin-bottom:12px}
+.panel h2 .more{font-size:12px;border:0;text-decoration:underline;text-underline-offset:3px}
+.planner-panel{padding:19px 22px 21px;margin-bottom:15px}
+.planner-toolbar{margin-bottom:11px}
+.planner-toolbar h2{font-size:20px;letter-spacing:-.035em}
+.planner-hint{display:block;margin-top:2px;color:var(--ink3);font-size:12px}
+.filter-row{gap:10px;padding:8px 0 12px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.filter-label{font-size:11px;color:var(--ink3)}
+.chip.cf{border-color:#d4ddd4;background:#fff;min-height:32px;padding:4px 9px;border-radius:6px;font-size:11.5px;font-weight:700}
+.chip.cf.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip.cf:hover:not(.on){background:#f0f4ef}
+.filter-manage{font-size:11.5px;color:var(--ink2)}
+.filter-manage:hover{color:var(--blue-d)}
+.planner-month-head h3,.mini-month-head h3{font-size:17px}
+.mcal{gap:3px}
+.mcal .dw{font-size:11px;color:#7b8980;padding:5px 0 6px}
+.mcal .month-week-pick{background:#eef3ee;color:#456554;border:0;border-radius:6px;min-height:68px;font-size:11px}
+.mcal .month-week-pick.active{background:var(--blue);color:#fff}
+.mcal .day-outside{background:#f7f8f6;border-radius:6px}
+.day{border:1px solid #e2e7e1;background:#fff;border-radius:6px;min-height:68px;padding:5px}
+.day:hover{border-color:#8aac98;background:#fafdfa}
+.day.on{background:#f0f6f1;border-color:var(--blue)}
+.day.today .dn{background:#ead79e;color:#574722}
+.day .ev{background:color-mix(in srgb,var(--c) 10%,#fff);font-size:10.5px}
+.week-title{font-size:17px}
+.mini-month{background:#fbfcfa;border-color:var(--line);border-radius:8px}
+.mini-month-grid .mini-week-pick{background:#eaf0e9;color:#375844}
+.mini-month-grid .mini-week-pick.active{background:var(--blue);color:#fff}
+.mini-month-grid .mini-day.active{background:#e7f0e8;color:#284b39}
+.wd{background:#fff;border-color:#dfe5df;border-radius:8px;min-height:124px}
+.wd:hover{border-color:#8aac98}
+.wd.wkend{background:#fafbf9}
+.wd.today{background:#fffdf5;border:1.5px solid #b89446;box-shadow:none;padding:9px}
+.wh{border-bottom-color:#e6ebe5}
+.wempty{color:#4f7963}
+.home-someday{background:#fff}
+.home-someday .someday-help{color:var(--ink3)}
+.done-panel{background:#fff}
+.btn{border-radius:7px;min-height:40px;background:var(--blue);font-weight:700;transition:background .15s}
+.btn:hover{transform:none;background:var(--blue-d)}
+.btn.ghost{background:#fff;color:var(--blue-d);border-color:#ccd9ce}
+.btn.sm{min-height:33px;padding:6px 10px;font-size:12px}
+input,select,textarea{border-color:#cad5cb;border-radius:7px;min-height:40px}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);outline:2px solid #bbd8c4}
+.empty{background:#f7f9f6;border:1px solid #e6ebe6;border-radius:7px;color:var(--ink2)}
+.item{border-color:#e7ebe7;padding:9px 0}
+.tag{border-radius:4px}
+.month.now{border-color:#98b6a2}
+.note{box-shadow:none}
+@media(max-width:899px){
+  .app{display:block}
+  .rail{background:#fff;border-top:1px solid var(--line);border-right:0;box-shadow:0 -4px 14px rgba(33,53,39,.05);padding:5px 4px calc(5px + env(safe-area-inset-bottom))}
+  .nav a{color:#5c6e60;min-height:51px;font-size:10px;padding:5px 1px}
+  .nav a.on{background:#eaf1eb;color:#234f40}
+  main{padding:18px 15px 96px}
+  .ph{padding:0 0 14px;margin-bottom:14px}
+  .ph h1{font-size:24px}
+  .home-heading .quick-actions{width:100%;display:flex;justify-content:flex-start;gap:3px;overflow-x:auto;flex-wrap:nowrap}
+  .home-heading .quick-actions button,.home-heading .quick-actions a{white-space:nowrap;min-height:37px;padding:6px 8px;font-size:11px;flex:none}
+  .work-overview{gap:0;margin-bottom:15px;padding-bottom:9px;justify-content:space-between}
+  .work-overview button{min-width:0;flex-direction:column;align-items:flex-start;gap:0;padding:4px 6px 4px 0}
+  .work-overview .overview-label{font-size:10px}
+  .work-overview .overview-count{font-size:16px}
+  .planner-panel{padding:15px 12px}
+  .filter-row{gap:6px}
+  .planner-toolbar h2{font-size:18px}
+  .mcal{grid-template-columns:31px repeat(7,minmax(0,1fr));gap:2px}
+  .mcal .month-week-pick,.mcal .day-outside{min-height:48px}
+  .day{min-height:48px}
+}
 @media(prefers-reduced-motion:reduce){.nav a,.btn{transition:none}}
 @media print{.paper{box-shadow:none}.doc-card{border-color:#1d2935}}
 
@@ -706,7 +817,7 @@ main{max-width:1440px;padding:28px clamp(20px,3vw,46px) 72px}
 <body>
 <div class="app">
   <aside class="rail">
-    <div class="brand"><b><span>업무수첩</span></b><small>특수교사 한눈에 업무판</small></div>
+    <div class="brand"><b><span>업무수첩</span></b><small>교사를 위한 업무 기록</small></div>
     <nav class="nav" id="nav" aria-label="메뉴"></nav>
     <div class="safe">기록은 이 기기 브라우저에만 저장돼요. 다른 곳으로 보내지 않아요.</div>
   </aside>
@@ -1144,7 +1255,7 @@ function plannerPanel(vm, showUndated = true){
   const year = vm >= 3 ? schoolYear() : schoolYear()+1;
   const prev = vm === 1 ? 12 : vm-1, next = vm === 12 ? 1 : vm+1;
   return `<section class="panel planner-panel">
-    <div class="planner-toolbar"><div><span class="section-eyebrow">PLANNER</span><h2>업무 일정</h2></div><span class="planner-hint">${mode==='week'?'날짜를 눌러 할 일을 적으세요.':'왼쪽 주 번호를 누르면 한 주가 열려요.'}</span></div>
+    <div class="planner-toolbar"><div><h2>업무 일정</h2><span class="planner-hint">${mode==='week'?'날짜를 눌러 할 일을 적으세요.':'왼쪽 주 번호를 누르면 한 주가 열려요.'}</span></div></div>
     ${catFilterBar()}
     ${mode==='week' ? weekBoard() : `<div class="planner-month-head"><h3>${year}년 ${vm}월</h3><div class="row">
       <button class="btn sm ghost" type="button" data-act="pickMonth" data-m="${prev}" aria-label="이전 달">‹</button>
@@ -1182,17 +1293,18 @@ function vHome(){
   const row = e => e.k === 'task' ? taskRow(e.x) : todoRow(e.x);
 
   return `
-  <header class="ph"><div>
+  <header class="ph home-heading"><div>
     <div class="today-line">${schoolYear()}학년도 · ${cm}월</div>
     <h1>${now.getMonth()+1}월 ${now.getDate()}일 ${DOW[now.getDay()]}요일${S.settings.className ? `, ${esc(S.settings.className)}` : ''}</h1>
-    <div class="sub">${todayLeft ? `오늘 할 일 ${todayLeft}개` : '오늘 남은 일이 없어요'}${late.length ? ` · <b style="color:var(--red)">놓친 일 ${late.length}개</b>` : ''}</div>
-  </div></header>
-  <div class="quick-actions" aria-label="자주 쓰는 기능">
-    <button type="button" data-act="taskNew"><span class="quick-icon" aria-hidden="true">＋</span><span>업무 추가</span></button>
-    <button type="button" data-act="stuNew"><span class="quick-icon" aria-hidden="true">＋</span><span>학생 카드 추가</span></button>
-    <a href="#obs"><span class="quick-icon" aria-hidden="true">●</span><span>관찰 기록</span></a>
-    <a href="#doc"><span class="quick-icon" aria-hidden="true">▤</span><span>서류 만들기</span></a>
+    ${late.length ? `<div class="sub"><b>놓친 일 ${late.length}개</b> · 달력에서 확인하세요.</div>` : ''}
   </div>
+    <div class="quick-actions" aria-label="자주 쓰는 기능">
+      <button type="button" data-act="taskNew"><span class="quick-icon" aria-hidden="true">＋</span><span>업무 추가</span></button>
+      <button type="button" data-act="stuNew"><span>학생 카드 추가</span></button>
+      <a href="#obs"><span>관찰 기록</span></a>
+      <a href="#doc"><span>서류 만들기</span></a>
+    </div>
+  </header>
   ${!S.welcomed ? `<section class="note welcome">
     <h2>처음 사용하시나요?</h2>
     <div>학생 카드를 적으면 필요한 서류와 관찰 기록에 연결돼요. 기록은 이 기기 브라우저에 저장되므로, 학생은 실명 대신 별칭으로 적어 주세요.</div>
