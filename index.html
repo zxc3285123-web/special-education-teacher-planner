@@ -1022,7 +1022,8 @@ function catFilterBar(){
   return `<div class="filter-row"><span class="filter-label">분류</span><div class="chips cf-bar" role="group" aria-label="업무 카테고리로 보기">${chip(null,'전체')}${S.cats.map(c => chip(c.id, esc(c.name), c.color)).join('')}${chip('none','미분류',null,true)}</div><button class="filter-manage" type="button" data-act="catManage" aria-label="카테고리 관리">분류 관리</button></div>`;
 }
 function dayCatSelect(){
-  const selected = S.cats.some(c => c.id === ui.catFilter) ? ui.catFilter : '';
+  const selected = ui.catFilter === 'none' ? '' : S.cats.some(c => c.id === ui.catFilter) ? ui.catFilter
+    : S.cats.some(c => c.id === ui.lastDayCat) ? ui.lastDayCat : '';
   return `<select class="day-cat-select" name="cat" aria-label="할 일 카테고리"><option value="" ${selected?'':'selected'}>카테고리 없음</option>${S.cats.map(c => `<option value="${c.id}" ${selected===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select>`;
 }
 function catPopup(anchor){
@@ -2006,6 +2007,7 @@ function handleForm(f){
     const date = f.dataset.date, wadd = f.classList.contains('wadd');
     const requestedCat = String(fd.get('cat')||'');
     const cat = S.cats.some(c => c.id === requestedCat) ? requestedCat : '';
+    ui.lastDayCat = cat;
     if (wadd) ui.weekEntryDate = null;
     S.todos.push({id:uid(), text, date, done:false, cat});
     if (ui.catFilter && (ui.catFilter === 'none' ? !!cat : ui.catFilter !== cat)) ui.catFilter = cat || 'none';
