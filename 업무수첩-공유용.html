@@ -763,6 +763,8 @@ main{max-width:1370px;padding:29px clamp(22px,3.3vw,48px) 70px}
 .day.on{background:#f0f6f1;border-color:var(--blue)}
 .day.today .dn{background:#ead79e;color:#574722}
 .day .ev{background:color-mix(in srgb,var(--c) 10%,#fff);font-size:10.5px}
+.day-cat-select{flex:0 0 160px;min-width:0;min-height:40px;padding:7px 29px 7px 10px;font-size:13px;color:var(--ink);background-color:#fff}
+.wadd .day-cat-select{flex:1 1 100%;width:100%;min-height:36px;font-size:12px}
 .week-title{font-size:17px}
 .mini-month{background:#fbfcfa;border-color:var(--line);border-radius:8px}
 .mini-month-grid .mini-week-pick{background:#eaf0e9;color:#375844}
@@ -808,6 +810,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);outline:2px sol
   .mcal{grid-template-columns:31px repeat(7,minmax(0,1fr));gap:2px}
   .mcal .month-week-pick,.mcal .day-outside{min-height:48px}
   .day{min-height:48px}
+  .add-row.day-add .day-cat-select{flex:1 1 150px}
 }
 @media(prefers-reduced-motion:reduce){.nav a,.btn{transition:none}}
 @media print{.paper{box-shadow:none}.doc-card{border-color:#1d2935}}
@@ -1017,6 +1020,10 @@ function catFilterBar(){
   const chip = (id, label, color, hollow) => `<button class="chip cf ${ui.catFilter===id?'on':''}" aria-pressed="${ui.catFilter===id}" data-act="catFilter" data-c="${id??''}">${color||hollow?`<i class="cdot-s ${hollow?'none':''}" style="${color?`--c:${color}`:''}"></i>`:''}${label}</button>`;
   return `<div class="filter-row"><span class="filter-label">분류</span><div class="chips cf-bar" role="group" aria-label="업무 카테고리로 보기">${chip(null,'전체')}${S.cats.map(c => chip(c.id, esc(c.name), c.color)).join('')}${chip('none','미분류',null,true)}</div><button class="filter-manage" type="button" data-act="catManage" aria-label="카테고리 관리">분류 관리</button></div>`;
 }
+function dayCatSelect(){
+  const selected = S.cats.some(c => c.id === ui.catFilter) ? ui.catFilter : '';
+  return `<select class="day-cat-select" name="cat" aria-label="할 일 카테고리"><option value="" ${selected?'':'selected'}>카테고리 없음</option>${S.cats.map(c => `<option value="${c.id}" ${selected===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select>`;
+}
 function catPopup(anchor){
   closeCatPop();
   const k = anchor.dataset.k, id = anchor.dataset.id;
@@ -1192,7 +1199,7 @@ function weekBoard(){
       return `<div class="wd ${k===t?'today':''} ${w===0||w===6?'wkend':''} ${k<t?'past':''}" data-act="weekDayOpen" data-d="${k}">
         <button type="button" class="wh week-day-head" data-act="weekDayOpen" data-d="${k}" aria-label="${d.getMonth()+1}월 ${d.getDate()}일 할 일 쓰기"><b class="${w===0?'sun':w===6?'sat':''}">${DOW[w]}</b> <span class="wdn">${d.getMonth()+1}/${d.getDate()}</span>${k===t?' <span class="tag y">오늘</span>':''}${list.length?`<span class="wc">${list.filter(e=>!e.done).length}</span>`:''}</button>
         <div class="wl">${list.length ? list.map(item).join('') : '<div class="wempty">+ 할 일 적기</div>'}</div>
-        ${ui.weekEntryDate===k?`<form data-form="dayTodo" data-date="${k}" class="wadd"><input type="text" name="text" placeholder="할 일 입력" aria-label="${d.getMonth()+1}월 ${d.getDate()}일 할 일 추가" required><div class="wadd-actions"><button class="btn sm" type="submit">저장</button><button class="btn sm ghost" type="button" data-act="taskNew" data-m="${d.getMonth()+1}" data-d="${k}">업무로 등록</button><button class="btn sm ghost" type="button" data-act="weekEntryClose">취소</button></div></form>`:''}
+        ${ui.weekEntryDate===k?`<form data-form="dayTodo" data-date="${k}" class="wadd"><input type="text" name="text" placeholder="할 일 입력" aria-label="${d.getMonth()+1}월 ${d.getDate()}일 할 일 추가" required>${dayCatSelect()}<div class="wadd-actions"><button class="btn sm" type="submit">저장</button><button class="btn sm ghost" type="button" data-act="taskNew" data-m="${d.getMonth()+1}" data-d="${k}">업무로 등록</button><button class="btn sm ghost" type="button" data-act="weekEntryClose">취소</button></div></form>`:''}
       </div>`;
     }).join('')}</div>
     <div class="legend"><span>날짜 칸을 누르면 그날 할 일을 적을 수 있어요. 글자를 누르면 바로 수정할 수 있어요.</span></div>
@@ -1240,6 +1247,7 @@ function monthCal(vm, showUndated = true, autoSelectToday = true){
       ${list.length ? list.map(e => e.k==='task' ? taskRow(e.x) : todoRow(e.x)).join('') : '<div class="day-detail-empty">일정이 없어요. 아래에 바로 적어 주세요.</div>'}
       <form class="add-row day-add" data-form="dayTodo" data-date="${ui.homeDay}">
         <input type="text" name="text" placeholder="할 일 입력" aria-label="${fmtMD(ui.homeDay)} 할 일" required>
+        ${dayCatSelect()}
         <button class="btn" type="submit">저장</button>
         <button class="btn ghost" type="button" data-act="taskNew" data-m="${vm}" data-d="${ui.homeDay}">업무로 등록</button>
       </form></div>`;
@@ -1995,8 +2003,12 @@ function handleForm(f){
   } else if (kind === 'dayTodo'){
     const text = (fd.get('text')||'').trim(); if (!text){ toast('할 일을 적어 주세요'); return; }
     const date = f.dataset.date, wadd = f.classList.contains('wadd');
+    const requestedCat = String(fd.get('cat')||'');
+    const cat = S.cats.some(c => c.id === requestedCat) ? requestedCat : '';
     if (wadd) ui.weekEntryDate = null;
-    S.todos.push({id:uid(), text, date, done:false, cat:ui.catFilter && ui.catFilter!=='none' ? ui.catFilter : ''}); save(); toast('할 일을 추가했어요'); render();
+    S.todos.push({id:uid(), text, date, done:false, cat});
+    if (ui.catFilter && (ui.catFilter === 'none' ? !!cat : ui.catFilter !== cat)) ui.catFilter = cat || 'none';
+    save(); toast('할 일을 추가했어요'); render();
     const next = wadd ? null : document.querySelector(`form[data-form="dayTodo"][data-date="${date}"]:not(.wadd) input[name=text]`);
     if (next) next.focus();
   } else if (kind === 'task'){
